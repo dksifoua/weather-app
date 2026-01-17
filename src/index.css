@@ -1,40 +1,44 @@
 @import "tailwindcss";
 
+@theme {
+    --color-neutral-900: #02012C;
+    --color-neutral-800: #262540;
+    --color-neutral-700: #302F4A;
+    --color-neutral-600: #3C3B5E;
+    --color-neutral-300: #ACACB7;
+    --color-neutral-200: #D4D3D9;
+    --color-neutral-0: #FFFFFF;
+
+    --color-orange-500: #FF820A;
+
+    --color-blue-700: #2B1B9C;
+    --color-blue-500: #4658D9;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    color-scheme: light dark;
+    color: var(--color-neutral-0);
+    background-color: var(--color-neutral-900);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+@layer base {
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+    body {
+        @apply min-w-sm min-h-screen;
+        @apply m-0 px-[112px] pt-[48px] pb-[80px];
+    }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
+    #root {
+        @apply w-full h-full flex flex-col gap-[64px];
+    }
 
-  button {
-    background-color: #f9f9f9;
-  }
 }
