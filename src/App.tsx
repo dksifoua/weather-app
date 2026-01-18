@@ -1,10 +1,11 @@
 import { type JSX } from "react"
+import { Header } from "@/components/Header"
 
 export function App(): JSX.Element {
 
     return (
         <>
-            <h1>Welcome to weather app</h1>
+            <Header/>
         </>
     )
 }
