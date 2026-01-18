@@ -15,33 +15,30 @@
     --color-blue-700: #2B1B9C;
     --color-blue-500: #4658D9;
 
-    --font-dm: "DM Sans";
-    --font-bg: "Bricolage Grotesque";
+    --font-bg-bold: "Bricolage Grotesque Bold";
+    --font-dm-light: "DM Sans Light";
+    --font-dm-medium: "DM Sans Medium";
+    --font-dm-semibold: "DM Sans Semi Bold";
+    --font-dm-semibold-italic: "DM Sans Semi Bold Italic";
+    --font-dm-bold: "DM Sans Bold";
 }
 
 :root {
-    font-family: var(--font-dm), sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+    font-family: var(--font-dm-light), serif;
 
     color-scheme: light dark;
     color: var(--color-neutral-0);
     background-color: var(--color-neutral-900);
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 @layer base {
 
     body {
-        @apply min-w-sm min-h-screen m-0 px-28 pt-12 pb-20 max-md:px-6 max-md:pt-6 max-md:pb-20 max-sm:px-4 max-sm:pt-4 max-sm:pb-12;
+        @apply min-w-sm min-h-screen m-0 px-4 pt-4 pb-12 md:px-6 md:pt-6 md:pb-20 lg:px-28 lg:pt-12 lg:pb-20;
     }
 
     #root {
-        @apply w-full h-full flex flex-col gap-16 max-md:gap-12;
+        @apply w-full h-full flex flex-col lg:gap-16 gap-12;
     }
 
 }
@@ -49,65 +46,56 @@
 @layer components {
 
     .text-preset-1 {
-        font-family: var(--font-dm), sans-serif;
-        font-weight: 600;
-        font-style: italic;
+        font-family: var(--font-dm-semibold-italic), serif;
         font-size: 96px;
         line-height: 100%;
         letter-spacing: -2px;
     }
 
     .text-preset-2 {
-        font-family: var(--font-bg), sans-serif;
-        font-weight: 700;
+        font-family: var(--font-bg-bold), serif;
         font-size: 52px;
         line-height: 120%;
         letter-spacing: 0;
     }
 
     .text-preset-3 {
-        font-family: var(--font-dm), sans-serif;
-        font-weight: 300;
+        font-family: var(--font-dm-light), serif;
         font-size: 32px;
         line-height: 100%;
         letter-spacing: 0;
     }
 
     .text-preset-4 {
-        font-family: var(--font-dm), sans-serif;
-        font-weight: 700;
+        font-family: var(--font-dm-bold), serif;
         font-size: 28px;
         line-height: 120%;
         letter-spacing: 0;
     }
 
     .text-preset-5 {
-        font-family: var(--font-dm), sans-serif;
-        font-weight: 600;
+        font-family: var(--font-dm-semibold), serif;
         font-size: 20px;
         line-height: 120%;
         letter-spacing: 0;
     }
 
     .text-preset-6 {
-        font-family: var(--font-dm), sans-serif;
-        font-weight: 500;
+        font-family: var(--font-dm-medium), serif;
         font-size: 18px;
         line-height: 120%;
         letter-spacing: 0;
     }
 
     .text-preset-7 {
-        font-family: var(--font-dm), sans-serif;
-        font-weight: 500;
+        font-family: var(--font-dm-medium), serif;
         font-size: 16px;
         line-height: 120%;
         letter-spacing: 0;
     }
 
     .text-preset-8 {
-        font-family: var(--font-dm), sans-serif;
-        font-weight: 500;
+        font-family: var(--font-dm-medium), serif;
         font-size: 14px;
         line-height: 120%;
         letter-spacing: 0;

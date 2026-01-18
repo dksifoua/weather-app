@@ -18,9 +18,9 @@ export function UnitContainer(): JSX.Element {
     return (
         <div className="relative">
             <div className="flex flex-row justify-center items-center bg-neutral-800 rounded-lg cursor-pointer
-                w-30 h-full gap-x-2.5
-                max-md:w-28 max-md:gap-x-2
-                max-sm:w-24 max-sm:gap-x-1.5
+                w-24 h-full gap-x-1.5
+                md:w-28 md:gap-x-2
+                lg:w-30 lg:gap-x-2.5
             " onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                 <img src={unitIcon} alt="Units Icon"/>
                 <span className="text-preset-7">Units</span>
