@@ -1,3 +1,4 @@
+@import "@/styles/font.css";
 @import "tailwindcss";
 
 @theme {
@@ -13,10 +14,13 @@
 
     --color-blue-700: #2B1B9C;
     --color-blue-500: #4658D9;
+
+    --font-dm: "DM Sans";
+    --font-bg: "Bricolage Grotesque";
 }
 
 :root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: var(--font-dm), sans-serif;
     line-height: 1.5;
     font-weight: 400;
 
@@ -33,12 +37,79 @@
 @layer base {
 
     body {
-        @apply min-w-sm min-h-screen;
-        @apply m-0 px-[112px] pt-[48px] pb-[80px];
+        @apply min-w-sm min-h-screen m-0 px-28 pt-12 pb-20 max-md:px-6 max-md:pt-6 max-md:pb-20 max-sm:px-4 max-sm:pt-4 max-sm:pb-12;
     }
 
     #root {
-        @apply w-full h-full flex flex-col gap-[64px];
+        @apply w-full h-full flex flex-col gap-16 max-md:gap-12;
     }
 
+}
+
+@layer components {
+
+    .text-preset-1 {
+        font-family: var(--font-dm), sans-serif;
+        font-weight: 600;
+        font-style: italic;
+        font-size: 96px;
+        line-height: 100%;
+        letter-spacing: -2px;
+    }
+
+    .text-preset-2 {
+        font-family: var(--font-bg), sans-serif;
+        font-weight: 700;
+        font-size: 52px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-3 {
+        font-family: var(--font-dm), sans-serif;
+        font-weight: 300;
+        font-size: 32px;
+        line-height: 100%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-4 {
+        font-family: var(--font-dm), sans-serif;
+        font-weight: 700;
+        font-size: 28px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-5 {
+        font-family: var(--font-dm), sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-6 {
+        font-family: var(--font-dm), sans-serif;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-7 {
+        font-family: var(--font-dm), sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
+
+    .text-preset-8 {
+        font-family: var(--font-dm), sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 120%;
+        letter-spacing: 0;
+    }
 }

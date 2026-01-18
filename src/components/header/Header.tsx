@@ -5,9 +5,9 @@ import { UnitContainer } from "@/components/header/UnitContainer"
 export function Header(): React.JSX.Element {
 
     return (
-        <header className="w-full h-auto flex flex-row">
-            <div className="basis-9/10">
-                <img src={logo} alt="Weather App Logo"/>
+        <header className="w-full h-12 max-md:h-10 max-sm:h-8 flex flex-row justify-between">
+            <div>
+                <img src={logo} className="h-full w-auto" alt="Weather App Logo"/>
             </div>
             <UnitContainer />
         </header>
