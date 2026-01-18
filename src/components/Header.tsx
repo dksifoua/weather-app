@@ -7,14 +7,14 @@ import CheckMarkIcon from "@/assets/images/icon-checkmark.svg"
 export function Header(): JSX.Element {
 
     return (
-        <div className="flex flex-row h-8 justify-between items-center">
+        <div className="flex flex-row h-8 md:h-11 justify-between items-center">
             <img src={Logo} alt="Weather app logo" className="h-full w-auto"/>
-            <UnitContainer/>
+            <SettingsContainer/>
         </div>
     )
 }
 
-function UnitContainer(): JSX.Element {
+function SettingsContainer(): JSX.Element {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
     useEffect(() => {
@@ -30,12 +30,12 @@ function UnitContainer(): JSX.Element {
     return (
         <div className="relative">
             <div onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                 className="flex flex-row gap-x-1.5 px-2.5 py-2 justify-between items-center bg-neutral-800 rounded-6"
+                 className="flex flex-row gap-x-1.5 md:gap-x-2.5 px-2.5 md:px-4 py-2 md:py-3 justify-between items-center bg-neutral-800 rounded-6"
             >
-                <img src={UnitsIcon} alt="Units icon" className="h-3.5 w-3.5"/>
-                <p className="font-dm-medium text-3.5 leading-[120%] spacing-0">Units</p>
+                <img src={UnitsIcon} alt="Units icon" className="h-3.5 md:h-4 w-3.5 md:w-4"/>
+                <p className="text-preset-8 md:text-preset-7">Units</p>
                 <img src={DropdownIcon} alt="Units icon"
-                     className={`h-3.5 w-3.5 transform ${isDropdownOpen ? '-rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`}/>
+                     className={`w-2.25 md:w-3 h-3.5 md:h-4.5 transform ${isDropdownOpen ? '-rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`}/>
             </div>
             {isDropdownOpen && <UnitDropdown/>}
         </div>
