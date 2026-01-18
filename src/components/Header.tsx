@@ -30,7 +30,7 @@ function SettingsContainer(): JSX.Element {
     return (
         <div className="relative">
             <div onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                 className="flex flex-row gap-x-1.5 md:gap-x-2.5 px-2.5 md:px-4 py-2 md:py-3 justify-between items-center bg-neutral-800 rounded-6"
+                 className="flex flex-row gap-x-1.5 md:gap-x-2.5 lg:gap-x-3 px-2.5 md:px-4 py-2 md:py-3 justify-between items-center bg-neutral-800 rounded-6"
             >
                 <img src={UnitsIcon} alt="Units icon" className="h-3.5 md:h-4 w-3.5 md:w-4"/>
                 <p className="text-preset-8 md:text-preset-7">Units</p>
