@@ -1,5 +1,33 @@
-@import "@/styles/font.css";
 @import "tailwindcss";
+
+@font-face {
+    font-family: "Bricolage Grotesque Bold";
+    src: url("./assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Bold.ttf") format("truetype");
+}
+@font-face {
+    font-family: "DM Sans Light";
+    src: url("./assets/fonts/DM_Sans/static/DMSans-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "DM Sans Medium";
+    src: url("./assets/fonts/DM_Sans/static/DMSans-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "DM Sans Semi Bold";
+    src: url("./assets/fonts/DM_Sans/static/DMSans-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "DM Sans Semi Bold Italic";
+    src: url("./assets/fonts/DM_Sans/static/DMSans-SemiBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "DM Sans Bold";
+    src: url("./assets/fonts/DM_Sans/static/DMSans-Bold.ttf") format("truetype");
+}
 
 @theme {
     --color-neutral-900: #02012C;
@@ -23,24 +51,12 @@
     --font-dm-bold: "DM Sans Bold";
 }
 
-:root {
-    font-family: var(--font-dm-light), serif;
-
-    color-scheme: light dark;
-    color: var(--color-neutral-0);
-    background-color: var(--color-neutral-900);
-}
-
 @layer base {
-
-    body {
-        @apply min-w-sm min-h-screen m-0 px-4 pt-4 pb-12 md:px-6 md:pt-6 md:pb-20 lg:px-28 lg:pt-12 lg:pb-20;
+    :root {
+        font-family: var(--font-dm-light), serif;
+        color: var(--color-neutral-0);
+        background-color: var(--color-neutral-900);
     }
-
-    #root {
-        @apply w-full h-full flex flex-col lg:gap-16 gap-12;
-    }
-
 }
 
 @layer components {

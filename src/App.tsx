@@ -1,14 +1,10 @@
-import * as React from "react"
-import { Header } from "@/components/header"
-import { MainContent } from "@/components/main"
+import { type JSX } from "react"
 
-export function App(): React.JSX.Element {
+export function App(): JSX.Element {
 
     return (
         <>
-            <Header />
-            <span className="text-preset-2 text-center md:w-120 m-auto">How's the sky looking today?</span>
-            <MainContent/>
+            <h1>Welcome to weather app</h1>
         </>
     )
 }
