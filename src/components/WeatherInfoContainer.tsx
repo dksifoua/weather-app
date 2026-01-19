@@ -24,8 +24,7 @@ function WeatherInfo({ location, date, temperature }: {
 
     return (
         <div className="
-            flex flex-col md:flex-row gap-y-4 md:gap-0 px-6 py-10 rounded-20 bg-[url('bg-today-small.svg')]
-            md:bg-[url('bg-today-large.svg')] bg-no-repeat bg-cover bg-center h-71.5
+            flex flex-col md:flex-row gap-y-4 md:gap-0 px-6 py-10 rounded-20 bg-today-small md:bg-today-large h-71.5
         ">
             <div className="m-auto flex flex-col gap-y-3">
                 <p className="text-preset-4 text-center">{location}</p>
