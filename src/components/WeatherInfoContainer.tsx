@@ -23,16 +23,14 @@ function WeatherInfo({ location, date, temperature }: {
 }): JSX.Element {
 
     return (
-        <div className="
-            flex flex-col md:flex-row gap-y-4 md:gap-0 px-6 py-10 rounded-20 bg-today-small md:bg-today-large h-71.5
-        ">
-            <div className="m-auto flex flex-col gap-y-3">
-                <p className="text-preset-4 text-center">{location}</p>
-                <p className="text-preset-6 text-center">{date.toDateString()}</p>
+        <div className="flex flex-col md:flex-row gap-y-4 md:gap-0 px-6 py-10 rounded-20 bg-today-small md:bg-today-large h-71.5 md:justify-between items-center">
+            <div className="flex flex-col gap-y-3 ">
+                <p className="text-preset-4 max-md:text-center">{location}</p>
+                <p className="text-preset-6 max-md:text-center">{date.toDateString()}</p>
             </div>
             <div className="flex flex-row gap-x-5 items-center">
                 <img src={SunnyIcon} alt="Sunny Icon" className="w-30 h-30"/>
-                <p className="text-preset-1 text-center">{temperature}°</p>
+                <p className="text-preset-1">{temperature}°</p>
             </div>
         </div>
     )
