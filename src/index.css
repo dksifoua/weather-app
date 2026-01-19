@@ -169,4 +169,14 @@
         background-position: center;
         background-size: cover;
     }
+
+    .border-focus-neutral:focus, .border-focus-neutral:hover {
+        outline: 2px solid var(--color-neutral-200);
+        outline-offset: 2px;
+    }
+
+    .border-focus-blue:focus, .border-focus-blue:hover {
+        outline: 2px solid var(--color-blue-500);
+        outline-offset: 2px;
+    }
 }

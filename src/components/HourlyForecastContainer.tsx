@@ -22,13 +22,13 @@ export function HourlyForecastContainer({ date }: { date: Date }): JSX.Element {
                 <div className="relative">
                     <div className="flex flex-row items-center justify-between">
                         <p className="text-preset-5">Hourly Forecast</p>
-                        <div onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                             className="flex flex-row gap-x-3 px-4 py-2 rounded-8 bg-neutral-600 cursor-pointer items-center"
+                        <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                             className="flex flex-row gap-x-3 px-4 py-2 rounded-8 bg-neutral-600 cursor-pointer items-center border-focus-neutral"
                         >
                             <p className="text-preset-7 ">{daysOfWeek[date.getDay()]}</p>
                             <img src={DropdownIcon} alt="Dropdown icon"
                                  className={`w-3 h-4.5 transform ${isDropdownOpen ? '-rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`}/>
-                        </div>
+                        </button>
                     </div>
                     {isDropdownOpen && <DaysDropdown date={date}/>}
                 </div>

@@ -5,7 +5,7 @@ const GeocodingApiResponseItemSchema = z.object({
     name: z.string(),
     latitude: z.number(),
     longitude: z.number(),
-    admin1: z.string(),
+    admin1: z.string().optional(),
     country: z.string(),
 })
 
@@ -14,7 +14,7 @@ export const GeocodingApiResponseSchema = z.array(GeocodingApiResponseItemSchema
 export const MatchedLocationSchema = GeocodingApiResponseItemSchema.transform((item: z.infer<typeof GeocodingApiResponseItemSchema>) => ({
     id: item.id,
     city: item.name,
-    region: item.admin1,
+    region: item.admin1 ?? "",
     country: item.country,
     latitude: item.latitude,
     longitude: item.longitude,
