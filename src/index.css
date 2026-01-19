@@ -94,7 +94,7 @@
     }
 
     #root {
-        @apply w-full h-full flex flex-col gap-y-12 lg:gap-y-16 px-4 md:px-6 lg:px-28 pt-4 md:pt-6 lg:pt-12 pb-12 md:pb-20
+        @apply w-full h-full flex flex-col gap-y-12 xl:gap-y-16 px-4 md:px-6 xl:px-28 2xl:px-72 pt-4 md:pt-6 xl:pt-12 pb-12 md:pb-20
     }
 }
 
