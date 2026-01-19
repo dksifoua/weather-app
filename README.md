@@ -25,8 +25,10 @@ Responsive weather app with search functionality, unit conversion, and detailed 
 
 ## Tech Stack
 
-- React.js
+- Typescript
+- React 19 + Vite
 - Tailwind CSS
+- Netlify
 
 
 ## Authors
