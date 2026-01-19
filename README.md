@@ -1,4 +1,5 @@
 # Weather App
+![Netlify Status](https://api.netlify.com/api/v1/badges/d719e032-d236-498a-b62a-a385440444ec/deploy-status)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/dksifoua/weather-app)
 ![GitHub repo size](https://img.shields.io/github/repo-size/dksifoua/weather-app)
 ![GitHub License](https://img.shields.io/github/license/dksifoua/weather-app)
@@ -8,6 +9,26 @@
 
 Responsive weather app with search functionality, unit conversion, and detailed forecasts using the Open-Meteo API.
 
+## Setup
+
+- **Dev environment setup:**
+
+```bash
+git clone https://github.com/dksifoua/weather-app.git
+cd weather-app
+bun install
+bun run dev
+```
+
+- **Production build and deployment:**
+
+```bash
+git clone https://github.com/dksifoua/weather-app.git
+cd weather-app
+bun install
+bun run build
+bun run preview
+```
 
 ## Features
 
