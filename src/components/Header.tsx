@@ -34,7 +34,7 @@ function SettingsContainer(): JSX.Element {
             >
                 <img src={UnitsIcon} alt="Units icon" className="h-3.5 md:h-4 w-3.5 md:w-4"/>
                 <p className="text-preset-8 md:text-preset-7">Units</p>
-                <img src={DropdownIcon} alt="Units icon"
+                <img src={DropdownIcon} alt="Dropdown icon"
                      className={`w-2.25 md:w-3 h-3.5 md:h-4.5 transform ${isDropdownOpen ? '-rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`}/>
             </div>
             {isDropdownOpen && <UnitDropdown/>}
@@ -49,7 +49,7 @@ function UnitDropdown(): JSX.Element {
 
     return (
         <div
-            className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-12"
+            className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-12 z-20"
         >
             <p onClick={() => setUnitSystem(unitSystem === "imperial" ? "metric" : "imperial")}
                className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer"
