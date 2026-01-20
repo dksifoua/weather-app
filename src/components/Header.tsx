@@ -3,6 +3,8 @@ import Logo from "@/assets/images/logo.svg"
 import UnitsIcon from "@/assets/images/icon-units.svg"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import CheckMarkIcon from "@/assets/images/icon-checkmark.svg"
+import type { UnitSystem } from "@/types"
+import { useUnitSystem } from "@/hooks/useUnitSystem"
 
 export function Header(): JSX.Element {
 
@@ -29,7 +31,7 @@ function SettingsContainer(): JSX.Element {
 
     return (
         <div className="relative">
-            <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            <button onClick={(): void => setIsDropdownOpen(!isDropdownOpen)}
                  className="flex flex-row gap-x-1.5 md:gap-x-2.5 xl:gap-x-3 px-2.5 md:px-4 py-2 md:py-3 justify-between items-center bg-neutral-800 rounded-6 cursor-pointer border-focus-neutral"
             >
                 <img src={UnitsIcon} alt="Units icon" className="h-3.5 md:h-4 w-3.5 md:w-4"/>
@@ -42,19 +44,17 @@ function SettingsContainer(): JSX.Element {
     )
 }
 
-type UnitSystem = "imperial" | "metric"
-
 function UnitDropdown(): JSX.Element {
-    const [unitSystem, setUnitSystem] = useState<UnitSystem>("imperial")
+    const { unitSystem, switchUnitSystem, getSwitchUnitSystemTo } = useUnitSystem()
 
     return (
         <div
             className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-12 z-20"
         >
-            <button onClick={() => setUnitSystem(unitSystem === "imperial" ? "metric" : "imperial")}
+            <button onClick={switchUnitSystem}
                className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer border-focus-neutral"
             >
-                Switch to <span className="capitalize">{unitSystem}</span>
+                Switch to <span className="capitalize">{getSwitchUnitSystemTo()}</span>
             </button>
             <UnitDropdownOption unitSystem={unitSystem} label="Temperature" metric="Celsius (°C)"
                                 imperial="Fahrenheit (°F)"/>
