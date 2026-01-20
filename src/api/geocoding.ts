@@ -1,6 +1,12 @@
-import { GeocodingApiResponseSchema, type MatchedLocation, MatchedLocationSchema } from "@/api/types"
+import {
+    GeoLocationsApiResponseSchema,
+    type GeoLocation,
+    GeoLocationSchema,
+    type GeoLocationApiResponse
+} from "@/api/geocoding.schema"
+import type { Result } from "@/api/types"
 
-export async function getMatchingLocation(searchTerm: string): Promise<{ matchedLocations: MatchedLocation[], error?: string }> {
+export async function getMatchingLocation(searchTerm: string): Promise<Result<GeoLocation[]>> {
     const params = new URLSearchParams({
         name: searchTerm,
         count: "20",
@@ -9,18 +15,19 @@ export async function getMatchingLocation(searchTerm: string): Promise<{ matched
     })
     const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params}`)
     if (response.status !== 200) {
-        return { matchedLocations: [], error: "Failed to fetch geocoding data." }
+        return { success: false, error: new Error("Failed to fetch geocoding data.") }
     }
 
     const content = await response.json()
     if (!content["results"]) {
-        return { matchedLocations: [], error: "No geocoding results found." }
+        return { success: false, error: new Error("No geocoding results found.") }
     }
 
-    const result = GeocodingApiResponseSchema.safeParse(content["results"])
+    const result = GeoLocationsApiResponseSchema.safeParse(content["results"])
     if (!result.success) {
-        return { matchedLocations: [], error: result.error.message }
+        return { success: false, error: result.error }
     }
 
-    return { matchedLocations: result.data.map((item): MatchedLocation => MatchedLocationSchema.parse(item)) }
+    const data = result.data.map((location: GeoLocationApiResponse): GeoLocation => GeoLocationSchema.parse(location))
+    return { success: true, data }
 }
