@@ -1,31 +1,16 @@
-import { type ChangeEvent, type JSX, useEffect, useState } from "react"
+import { type ChangeEvent, type JSX, useState } from "react"
 import SearchIcon from "@/assets/images/icon-search.svg"
 import { getMatchingLocation } from "@/api/geocoding"
 import type { GeoLocation } from "@/api/geocoding/schema"
-import type { Result } from "@/types"
+import { useFetch } from "@/hooks/fetch.hook"
 
 export function SearchContainer(): JSX.Element {
     const [searchInput, setSearchInput] = useState<string>("")
-    // const [_, setSearchLocation] = useState<Nullable<GeoLocation>>(null)
-    const [possibleLocations, setPossibleLocations] = useState<GeoLocation[]>([])
+    const [matchedLocations,, setMatchedLocations] = useFetch({
+        apiCallFunction: getMatchingLocation,
+        fetchParameter: searchInput
+    })
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
-
-    useEffect(() => {
-        if (searchInput.length < 2) return
-
-        const timer = setTimeout(() => {
-            getMatchingLocation(searchInput).then((result: Result<GeoLocation[]>): void => {
-                if (!result.success) {
-                    console.error(result.error)
-                    return
-                }
-
-                setPossibleLocations(result.data)
-            })
-        }, 500)
-
-        return () => clearTimeout(timer)
-    }, [searchInput])
 
     function searchInputOnChange(event: ChangeEvent<HTMLInputElement>): void {
         const value: string = event.target.value
@@ -35,13 +20,12 @@ export function SearchContainer(): JSX.Element {
             setIsDropdownOpen(true)
         } else {
             setIsDropdownOpen(false)
-            setPossibleLocations([])
+            setMatchedLocations([])
         }
     }
 
     function updateSearchInput(searchLocation: GeoLocation): void {
         setSearchInput(`${searchLocation.city}, ${searchLocation.region}, ${searchLocation.country}`)
-        // setSearchLocation(searchLocation)
         setIsDropdownOpen(false)
     }
 
@@ -53,8 +37,8 @@ export function SearchContainer(): JSX.Element {
                 <input type="search" value={searchInput} onChange={searchInputOnChange}
                        placeholder="Search for a place..."
                        className="w-full h-full pl-15 pr-5 placeholder:text-preset-5 color-neutral-200 rounded-12 border-focus-neutral"/>
-                {isDropdownOpen &&
-                    <SearchDropdown locations={possibleLocations} updateSearchInput={updateSearchInput}/>}
+                {isDropdownOpen && matchedLocations.success &&
+                    <SearchDropdown locations={matchedLocations.data} updateSearchInput={updateSearchInput}/>}
             </div>
             <button type="submit"
                     className="h-14 px-6 py-4 rounded-12 bg-blue-500 text-preset-5 cursor-pointer border-focus-blue">Search

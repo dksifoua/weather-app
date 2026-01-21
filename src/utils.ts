@@ -1,5 +1,5 @@
 import type { UnitSystem } from "@/types"
-import type { UnitsContextType } from "@/contexts/UnitsContext"
+import type { UnitsContextType } from "@/contexts/units.context"
 
 export function getUpdateUnitSystem(
     {

@@ -1,5 +1,5 @@
 import { getUpdateUnitSystem } from "@/utils"
-import type { UnitsAction, UnitsContextType } from "@/contexts/UnitsContext"
+import type { UnitsAction, UnitsContextType } from "@/contexts/units.context"
 
 export function unitsReducer(state: UnitsContextType, action: UnitsAction): UnitsContextType {
     switch (action.type) {

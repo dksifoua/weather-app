@@ -24,7 +24,7 @@ Responsive weather app with search functionality, unit conversion, and detailed 
 
 ## Setup
 
-- **Dev environment setup:**
+- **Serve original source code (unbundled):**
 
 ```bash
 git clone https://github.com/dksifoua/weather-app.git
@@ -33,7 +33,7 @@ bun install
 bun run dev
 ```
 
-- **Production build and deployment:**
+- **Serve the production version:**
 
 ```bash
 git clone https://github.com/dksifoua/weather-app.git

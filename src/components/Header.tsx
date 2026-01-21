@@ -3,10 +3,10 @@ import Logo from "@/assets/images/logo.svg"
 import UnitsIcon from "@/assets/images/icon-units.svg"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import CheckMarkIcon from "@/assets/images/icon-checkmark.svg"
-import { useUnits, useUnitsDispatcher } from "@/hooks/units.hooks"
-import type { UnitsAction } from "@/contexts/UnitsContext"
+import { useUnits, useUnitsDispatcher } from "@/hooks/units.hook"
+import type { UnitsAction } from "@/contexts/units.context"
 import type { MeasureType, UnitFor } from "@/types"
-import { useCloseDropdown } from "@/hooks/close-dropdown.hook"
+import { useCloseDropdown } from "@/hooks/dropdown.hook"
 
 export function Header(): JSX.Element {
 

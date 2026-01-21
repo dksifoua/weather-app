@@ -1,7 +1,7 @@
 import { type JSX, useRef, useState } from "react"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import SunnyIcon from "@/assets/images/icon-sunny.webp"
-import { useCloseDropdown } from "@/hooks/close-dropdown.hook"
+import { useCloseDropdown } from "@/hooks/dropdown.hook"
 
 const daysOfWeek: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
