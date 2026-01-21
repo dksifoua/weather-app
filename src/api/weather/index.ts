@@ -1,0 +1,32 @@
+import type { Result } from "@/types"
+import { type WeatherData, WeatherDataApiResponseSchema, WeatherDataSchema } from "@/api/weather/schema"
+
+export async function getWeatherData({ latitude, longitude }: {
+    latitude: number,
+    longitude: number
+}): Promise<Result<WeatherData>> {
+    const params = new URLSearchParams({
+        latitude: `${latitude}`,
+        longitude: `${longitude}`,
+        daily: "weather_code,temperature_2m_max,temperature_2m_min",
+        hourly: "temperature_2m,weather_code",
+        current: "weather_code,temperature_2m",
+        timezone: "auto"
+    })
+    const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`)
+    if (response.status !== 200) {
+        return { success: false, error: new Error("Failed to fetch weather data.") }
+    }
+
+    const parsedWeatherDataApiResponse = WeatherDataApiResponseSchema.safeParse(await response.json())
+    if (!parsedWeatherDataApiResponse.success) {
+        return { success: false, error: new Error("Failed to parse weather data response.") }
+    }
+
+    const parsedWeatherData = WeatherDataSchema.safeParse(parsedWeatherDataApiResponse.data)
+    if (!parsedWeatherData.success) {
+        return { success: false, error: new Error("Failed to transform weather data response.") }
+    }
+
+    return { success: true, data: parsedWeatherData.data }
+}

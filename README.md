@@ -1,5 +1,4 @@
 # Weather App
-[![Build](https://github.com/dksifoua/weather-app/actions/workflows/build.yaml/badge.svg)](https://github.com/dksifoua/weather-app/actions/workflows/build.yaml)
 [![Deployment](https://github.com/dksifoua/weather-app/actions/workflows/deployment.yaml/badge.svg)](https://github.com/dksifoua/weather-app/actions/workflows/deployment.yaml)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/dksifoua/weather-app)
 ![GitHub repo size](https://img.shields.io/github/repo-size/dksifoua/weather-app)

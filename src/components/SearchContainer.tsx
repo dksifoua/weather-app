@@ -1,31 +1,30 @@
 import { type ChangeEvent, type JSX, useEffect, useState } from "react"
 import SearchIcon from "@/assets/images/icon-search.svg"
 import { getMatchingLocation } from "@/api/geocoding"
-import type { GeoLocation } from "@/api/geocoding.schema"
-import type { Result } from "@/api/types"
-import type { Nullable } from "@/types"
+import type { GeoLocation } from "@/api/geocoding/schema"
+import type { Result } from "@/types"
 
 export function SearchContainer(): JSX.Element {
     const [searchInput, setSearchInput] = useState<string>("")
-    const [_searchLocation, setSearchLocation] = useState<Nullable<GeoLocation>>(null)
+    // const [_, setSearchLocation] = useState<Nullable<GeoLocation>>(null)
     const [possibleLocations, setPossibleLocations] = useState<GeoLocation[]>([])
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
-    useEffect((): void => {
-        if (searchInput.length < 2) {
-            setIsDropdownOpen(false)
-            setPossibleLocations([])
-            return
-        }
+    useEffect(() => {
+        if (searchInput.length < 2) return
 
-        getMatchingLocation(searchInput).then((result: Result<GeoLocation[]>): void => {
-            if (!result.success) {
-                console.error(result.error)
-                return
-            }
+        const timer = setTimeout(() => {
+            getMatchingLocation(searchInput).then((result: Result<GeoLocation[]>): void => {
+                if (!result.success) {
+                    console.error(result.error)
+                    return
+                }
 
-            setPossibleLocations(result.data)
-        })
+                setPossibleLocations(result.data)
+            })
+        }, 500)
+
+        return () => clearTimeout(timer)
     }, [searchInput])
 
     function searchInputOnChange(event: ChangeEvent<HTMLInputElement>): void {
@@ -34,12 +33,15 @@ export function SearchContainer(): JSX.Element {
 
         if (value.length >= 2) {
             setIsDropdownOpen(true)
+        } else {
+            setIsDropdownOpen(false)
+            setPossibleLocations([])
         }
     }
 
     function updateSearchInput(searchLocation: GeoLocation): void {
         setSearchInput(`${searchLocation.city}, ${searchLocation.region}, ${searchLocation.country}`)
-        setSearchLocation(searchLocation)
+        // setSearchLocation(searchLocation)
         setIsDropdownOpen(false)
     }
 
@@ -48,12 +50,15 @@ export function SearchContainer(): JSX.Element {
             <div
                 className="h-14 md:w-full flex flex-row items-center bg-neutral-800 rounded-12 relative">
                 <img src={SearchIcon} alt="Search Icon" className="w-5 h-5 absolute left-6"/>
-                <input type="search" value={searchInput} onChange={searchInputOnChange} onFocus={searchInputOnChange}
+                <input type="search" value={searchInput} onChange={searchInputOnChange}
                        placeholder="Search for a place..."
                        className="w-full h-full pl-15 pr-5 placeholder:text-preset-5 color-neutral-200 rounded-12 border-focus-neutral"/>
-                {isDropdownOpen && <SearchDropdown locations={possibleLocations} updateSearchInput={updateSearchInput}/>}
+                {isDropdownOpen &&
+                    <SearchDropdown locations={possibleLocations} updateSearchInput={updateSearchInput}/>}
             </div>
-            <button type="submit" className="h-14 px-6 py-4 rounded-12 bg-blue-500 text-preset-5 cursor-pointer border-focus-blue">Search</button>
+            <button type="submit"
+                    className="h-14 px-6 py-4 rounded-12 bg-blue-500 text-preset-5 cursor-pointer border-focus-blue">Search
+            </button>
         </form>
     )
 }

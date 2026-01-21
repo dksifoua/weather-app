@@ -3,8 +3,8 @@ import {
     type GeoLocation,
     GeoLocationSchema,
     type GeoLocationApiResponse
-} from "@/api/geocoding.schema"
-import type { Result } from "@/api/types"
+} from "@/api/geocoding/schema"
+import type { Result } from "@/types"
 
 export async function getMatchingLocation(searchTerm: string): Promise<Result<GeoLocation[]>> {
     const params = new URLSearchParams({
