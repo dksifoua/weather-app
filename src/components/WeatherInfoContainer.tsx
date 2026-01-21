@@ -1,5 +1,9 @@
 import { type JSX } from "react"
 import SunnyIcon from "@/assets/images/icon-sunny.webp"
+import { useUnits } from "@/hooks/units.hooks"
+import type { MeasureType, Nullable, UnitFor } from "@/types"
+import { getUnitLabelFor } from "@/utils"
+import type { UnitsContextType } from "@/contexts/UnitsContext"
 
 export function WeatherInfoContainer(): JSX.Element {
 
@@ -7,10 +11,10 @@ export function WeatherInfoContainer(): JSX.Element {
         <div className="flex flex-col gap-y-5 xl:gap-y-8">
             <WeatherInfo location="Berlin, Germany" date={new Date()} temperature={20}/>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-x-5 xl:gap-x-6">
-                <WeatherDetail label="Feels Like" value="18°"/>
-                <WeatherDetail label="Humidity" value="46%"/>
-                <WeatherDetail label="Wind" value="14 km/h"/>
-                <WeatherDetail label="Precipitation" value="0 mm"/>
+                <WeatherDetail measureType="temperature" label="Feels Like" value={18}/>
+                <WeatherDetail measureType={null} label="Humidity" value={48}/>
+                <WeatherDetail measureType="wind-speed" label="Wind" value={14}/>
+                <WeatherDetail measureType="precipitation" label="Precipitation" value={0}/>
             </div>
         </div>
     )
@@ -36,12 +40,28 @@ function WeatherInfo({ location, date, temperature }: {
     )
 }
 
-function WeatherDetail({ label, value }: { label: string, value: string }): JSX.Element {
+function WeatherDetail({ measureType, label, value }: { measureType: Nullable<MeasureType>, label: string, value: number }): JSX.Element {
+    const { temperatureUnit, windSpeedUnit, precipitationUnit } = useUnits()
+
+    let unitLabel: string
+    switch (measureType) {
+        case "temperature":
+            unitLabel = temperatureUnit == "celsius" ? "°C" : "°F"
+            break
+        case "wind-speed":
+            unitLabel = windSpeedUnit
+            break
+        case "precipitation":
+            unitLabel = precipitationUnit
+            break
+        default:
+            unitLabel = "%"
+    }
 
     return (
         <div className="h-29.5 flex flex-col gap-y-6 p-5 rounded-12 bg-neutral-800 border-neutral-600 border">
             <p className="text-preset-6">{label}</p>
-            <p className="text-preset-3">{value}</p>
+            <p className="text-preset-3">{value} {unitLabel}</p>
         </div>
     )
 }

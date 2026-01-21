@@ -1,10 +1,11 @@
-import { type JSX, useEffect, useState } from "react"
+import { type Dispatch, type JSX, useEffect, useState } from "react"
 import Logo from "@/assets/images/logo.svg"
 import UnitsIcon from "@/assets/images/icon-units.svg"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import CheckMarkIcon from "@/assets/images/icon-checkmark.svg"
-import type { UnitSystem } from "@/types"
-import { useUnitSystem } from "@/hooks/useUnitSystem"
+import { useUnits, useUnitsDispatcher } from "@/hooks/units.hooks"
+import type { UnitsAction } from "@/contexts/UnitsContext"
+import type { MeasureType, UnitFor } from "@/types"
 
 export function Header(): JSX.Element {
 
@@ -27,12 +28,12 @@ function SettingsContainer(): JSX.Element {
         }, 7000)
 
         return () => clearTimeout(timeoutId)
-    }, [isDropdownOpen]);
+    }, [isDropdownOpen])
 
     return (
         <div className="relative">
             <button onClick={(): void => setIsDropdownOpen(!isDropdownOpen)}
-                 className="flex flex-row gap-x-1.5 md:gap-x-2.5 xl:gap-x-3 px-2.5 md:px-4 py-2 md:py-3 justify-between items-center bg-neutral-800 rounded-6 cursor-pointer border-focus-neutral"
+                    className="flex flex-row gap-x-1.5 md:gap-x-2.5 xl:gap-x-3 px-2.5 md:px-4 py-2 md:py-3 justify-between items-center bg-neutral-800 rounded-6 cursor-pointer border-focus-neutral"
             >
                 <img src={UnitsIcon} alt="Units icon" className="h-3.5 md:h-4 w-3.5 md:w-4"/>
                 <p className="text-preset-8 md:text-preset-7">Units</p>
@@ -45,49 +46,60 @@ function SettingsContainer(): JSX.Element {
 }
 
 function UnitDropdown(): JSX.Element {
-    const { unitSystem, switchUnitSystem, getSwitchUnitSystemTo } = useUnitSystem()
+    const { unitSystem, temperatureUnit, windSpeedUnit, precipitationUnit } = useUnits()
+    const dispatch: Dispatch<UnitsAction> = useUnitsDispatcher()
 
     return (
         <div
             className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-12 z-20"
         >
-            <button onClick={switchUnitSystem}
-               className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer border-focus-neutral"
+            <button onClick={() => dispatch({ type: "SWITCH_UNIT_SYSTEM" })}
+                    className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer border-focus-neutral"
             >
-                Switch to <span className="capitalize">{getSwitchUnitSystemTo()}</span>
+                Switch to <span className="capitalize">{unitSystem === "metric" ? "imperial" : "metric"}</span>
             </button>
-            <UnitDropdownOption unitSystem={unitSystem} label="Temperature" metric="Celsius (°C)"
-                                imperial="Fahrenheit (°F)"/>
+            <UnitDropdownOption measureType="temperature" label="Temperature" options={[
+                { selected: temperatureUnit === "celsius", unit: "celsius", description: "Celsius (°C)" },
+                { selected: temperatureUnit === "fahrenheit", unit: "fahrenheit", description: "Fahrenheit (°F)" }
+            ]}/>
             <div className="h-px bg-neutral-600"/>
-            <UnitDropdownOption unitSystem={unitSystem} label="Wind Speed" metric="Kilometers per hour (km/h)"
-                                imperial="Miles per hour (mph)"/>
+            <UnitDropdownOption measureType="wind-speed" label="Wind Speed" options={[
+                { selected: windSpeedUnit === "km/h", unit: "km/h", description: "Kilometers per hour (km/h)" },
+                { selected: windSpeedUnit === "mph", unit: "mph", description: "Miles per hour (mph)" }
+            ]}/>
             <div className="h-px bg-neutral-600"/>
-            <UnitDropdownOption unitSystem={unitSystem} label="Precipitation" metric="Millimeters (mm)"
-                                imperial="Inches (in)"/>
+            <UnitDropdownOption measureType="precipitation" label="Precipitation" options={[
+                { selected: precipitationUnit === "mm", unit: "mm", description: "Millimeters (mm)" },
+                { selected: precipitationUnit === "in", unit: "in", description: "Inches (in)" }
+            ]}/>
         </div>
     )
 }
 
-function UnitDropdownOption({ unitSystem, label, metric, imperial }: {
-    unitSystem: UnitSystem,
+function UnitDropdownOption({ measureType, label, options }: {
+    measureType: MeasureType
     label: string,
-    metric: string,
-    imperial: string
+    options: { selected: boolean, unit: UnitFor<MeasureType>, description: string }[]
 }): JSX.Element {
+    const dispatch: Dispatch<UnitsAction> = useUnitsDispatcher()
 
     return (
         <div className="flex flex-col gap-y-2">
             <p className="px-2 pt-1.5 pb-0 text-neutral-300">{label}</p>
-            <div
-                className={`h-10 flex flex-row gap-x-2.5 px-2 py-2.5 ${unitSystem === "metric" && "bg-neutral-700"} rounded-8 items-center justify-between cursor-pointer`}>
-                <p>{metric}</p>
-                {unitSystem === "metric" && <img src={CheckMarkIcon} alt="Checkmark icon" className="h-3.5 w-4.25"/>}
-            </div>
-            <div
-                className={`h-10 flex flex-row gap-x-2.5 px-2 py-2.5 ${unitSystem === "imperial" && "bg-neutral-700"} rounded-8 items-center justify-between cursor-pointer`}>
-                <p>{imperial}</p>
-                {unitSystem === "imperial" && <img src={CheckMarkIcon} alt="Checkmark icon" className="h-3.5 w-4.25"/>}
-            </div>
+            {
+                options.map((option, index) => (
+                    <button
+                        key={index}
+                        onClick={() => dispatch({ type: "SWITCH_MEASURE_UNIT", payload: { measureType } })}
+                        className={`h-10 flex flex-row gap-x-2.5 px-2 py-2.5 rounded-8 items-center justify-between border-focus-neutral ${
+                            option.selected ? "bg-neutral-700" : "cursor-pointer"
+                        }`}
+                    >
+                        <span className="text-preset-7">{option.description}</span>
+                        {option.selected && <img src={CheckMarkIcon} alt="Checkmark icon" className="h-3.5 w-4.25"/>}
+                    </button>
+                ))
+            }
         </div>
     )
 }

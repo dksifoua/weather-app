@@ -7,7 +7,7 @@ import type { Nullable } from "@/types"
 
 export function SearchContainer(): JSX.Element {
     const [searchInput, setSearchInput] = useState<string>("")
-    const [searchLocation, setSearchLocation] = useState<Nullable<GeoLocation>>(null)
+    const [_searchLocation, setSearchLocation] = useState<Nullable<GeoLocation>>(null)
     const [possibleLocations, setPossibleLocations] = useState<GeoLocation[]>([])
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
@@ -27,8 +27,6 @@ export function SearchContainer(): JSX.Element {
             setPossibleLocations(result.data)
         })
     }, [searchInput])
-
-    console.log(searchLocation)
 
     function searchInputOnChange(event: ChangeEvent<HTMLInputElement>): void {
         const value: string = event.target.value
