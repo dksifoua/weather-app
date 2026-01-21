@@ -1,4 +1,4 @@
-import { type Dispatch, type JSX, useEffect, useState } from "react"
+import { type Dispatch, type JSX, useRef, useState } from "react"
 import Logo from "@/assets/images/logo.svg"
 import UnitsIcon from "@/assets/images/icon-units.svg"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
@@ -6,6 +6,7 @@ import CheckMarkIcon from "@/assets/images/icon-checkmark.svg"
 import { useUnits, useUnitsDispatcher } from "@/hooks/units.hooks"
 import type { UnitsAction } from "@/contexts/UnitsContext"
 import type { MeasureType, UnitFor } from "@/types"
+import { useCloseDropdown } from "@/hooks/close-dropdown.hook"
 
 export function Header(): JSX.Element {
 
@@ -18,20 +19,13 @@ export function Header(): JSX.Element {
 }
 
 function SettingsContainer(): JSX.Element {
+    const ref = useRef<HTMLDivElement>(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
-    useEffect(() => {
-        if (!isDropdownOpen) return
-
-        const timeoutId = setTimeout(() => {
-            setIsDropdownOpen(false)
-        }, 7000)
-
-        return () => clearTimeout(timeoutId)
-    }, [isDropdownOpen])
+    useCloseDropdown(ref, (): void => setIsDropdownOpen(false))
 
     return (
-        <div className="relative">
+        <div className="relative" ref={ref}>
             <button onClick={(): void => setIsDropdownOpen(!isDropdownOpen)}
                     className="flex flex-row gap-x-1.5 md:gap-x-2.5 xl:gap-x-3 px-2.5 md:px-4 py-2 md:py-3 justify-between items-center bg-neutral-800 rounded-6 cursor-pointer border-focus-neutral"
             >
@@ -51,7 +45,7 @@ function UnitDropdown(): JSX.Element {
 
     return (
         <div
-            className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-12 z-20"
+            className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-14 z-20"
         >
             <button onClick={() => dispatch({ type: "SWITCH_UNIT_SYSTEM" })}
                     className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer border-focus-neutral"

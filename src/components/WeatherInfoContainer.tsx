@@ -1,9 +1,7 @@
 import { type JSX } from "react"
 import SunnyIcon from "@/assets/images/icon-sunny.webp"
 import { useUnits } from "@/hooks/units.hooks"
-import type { MeasureType, Nullable, UnitFor } from "@/types"
-import { getUnitLabelFor } from "@/utils"
-import type { UnitsContextType } from "@/contexts/UnitsContext"
+import type { MeasureType, Nullable } from "@/types"
 
 export function WeatherInfoContainer(): JSX.Element {
 

@@ -1,25 +1,19 @@
-import { type JSX, useEffect, useState } from "react"
+import { type JSX, useRef, useState } from "react"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import SunnyIcon from "@/assets/images/icon-sunny.webp"
+import { useCloseDropdown } from "@/hooks/close-dropdown.hook"
 
 const daysOfWeek: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 export function HourlyForecastContainer({ date }: { date: Date }): JSX.Element {
+    const ref = useRef<HTMLDivElement>(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
-    useEffect(() => {
-        if (!isDropdownOpen) return
-
-        const timeoutId = setTimeout(() => {
-            setIsDropdownOpen(false)
-        }, 7000)
-
-        return () => clearTimeout(timeoutId)
-    }, [isDropdownOpen]);
+    useCloseDropdown(ref, (): void => setIsDropdownOpen(false))
 
     return (
             <div className="h-full flex flex-col gap-y-4 px-4 md:px-6 py-5 md:py-6 rounded-20 bg-neutral-800">
-                <div className="relative">
+                <div className="relative" ref={ref}>
                     <div className="flex flex-row items-center justify-between">
                         <p className="text-preset-5">Hourly Forecast</p>
                         <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -56,7 +50,7 @@ function DaysDropdown({ date }: { date: Date }): JSX.Element {
     const selectedDay = daysOfWeek[date.getDay()]
 
     return (
-        <div className="w-53.5 flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-600 absolute right-0 top-10">
+        <div className="w-53.5 flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-600 absolute right-0 top-12">
             {
                 daysOfWeek.map((day: string, index: number) => {
                     return (
