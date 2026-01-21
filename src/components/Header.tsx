@@ -48,8 +48,7 @@ function UnitDropdown(): JSX.Element {
             className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-14 z-20"
         >
             <button onClick={() => dispatch({ type: "SWITCH_UNIT_SYSTEM" })}
-                    className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer border-focus-neutral"
-            >
+                    className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer border-focus-neutral">
                 Switch to <span className="capitalize">{unitSystem === "metric" ? "imperial" : "metric"}</span>
             </button>
             <UnitDropdownOption measureType="temperature" label="Temperature" options={[
@@ -84,9 +83,9 @@ function UnitDropdownOption({ measureType, label, options }: {
                 options.map((option, index) => (
                     <button
                         key={index}
-                        onClick={() => dispatch({ type: "SWITCH_MEASURE_UNIT", payload: { measureType } })}
-                        className={`h-10 flex flex-row gap-x-2.5 px-2 py-2.5 rounded-8 items-center justify-between border-focus-neutral ${
-                            option.selected ? "bg-neutral-700" : "cursor-pointer"
+                        onClick={() => !option.selected && dispatch({ type: "SWITCH_MEASURE_UNIT", payload: { measureType } })}
+                        className={`h-10 flex flex-row gap-x-2.5 px-2 py-2.5 rounded-8 items-center justify-between ${
+                            option.selected ? "bg-neutral-700" : "cursor-pointer border-focus-neutral"
                         }`}
                     >
                         <span className="text-preset-7">{option.description}</span>

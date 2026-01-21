@@ -1,5 +1,6 @@
 import type { MeasureType, Nullable, UnitFor, UnitSystem } from "@/types"
 import { createContext, type Dispatch, type ReactNode, useReducer } from "react"
+import { getUpdateUnitSystem } from "@/utils"
 
 export type UnitsContextType = {
     unitSystem: UnitSystem
@@ -28,19 +29,25 @@ export function unitsReducer(state: UnitsContextType, action: UnitsAction): Unit
             const { measureType } = action.payload
             switch (measureType) {
                 case "temperature":
+                    const updatedTemperatureUnit = state.temperatureUnit === "celsius" ? "fahrenheit" : "celsius"
                     return {
                         ...state,
-                        temperatureUnit: state.temperatureUnit === "celsius" ? "fahrenheit" : "celsius"
+                        temperatureUnit: updatedTemperatureUnit,
+                        unitSystem: getUpdateUnitSystem({ ...state, temperatureUnit: updatedTemperatureUnit })
                     }
                 case "wind-speed":
+                    const updatedWindSpeedUnit = state.windSpeedUnit === "km/h" ? "mph" : "km/h"
                     return {
                         ...state,
-                        windSpeedUnit: state.windSpeedUnit === "km/h" ? "mph" : "km/h"
+                        windSpeedUnit: updatedWindSpeedUnit,
+                        unitSystem: getUpdateUnitSystem({ ...state, windSpeedUnit: updatedWindSpeedUnit })
                     }
                 case "precipitation":
+                    const updatedPrecipitationUnit = state.precipitationUnit === "mm" ? "in" : "mm"
                     return {
                         ...state,
-                        precipitationUnit: state.precipitationUnit === "mm" ? "in" : "mm"
+                        precipitationUnit: updatedPrecipitationUnit,
+                        unitSystem: getUpdateUnitSystem({ ...state, precipitationUnit: updatedPrecipitationUnit })
                     }
                 default:
                     throw new Error(`Unknown measure type: ${measureType}`)
