@@ -44,16 +44,14 @@ bun run build
 bun run preview
 ```
 
-
 ## Tech Stack
 
-- Typescript
-- React 19 (Hook + Context) + Vite
-- Tailwind CSS
-- Fetch (api integration) + Zod (data validation)
-- Netlify
+- **Frontend Core:** [React](https://react.dev/) 19 (Hooks & Context API) with [TypeScript](https://www.typescriptlang.org/) for type-safe development.
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) 4.1 for a modern, utility-first UI design.
+- **Data Management:** [Zod](https://zod.dev/) for schema-driven API validation and the native Fetch API for lightweight network requests.
+- **Build Tooling:** [Vite](https://vitejs.dev/) for an optimized development environment and fast bundling.
+- **CI/CD & Infrastructure:** [GitHub Actions](https://github.com/features/actions) for automated Build/Deploy pipelines, hosted on [GitHub Pages](https://pages.github.com/).
 
-
-## Authors
+## Author
 
 - [@dksifoua](https://www.github.com/dksifoua)
