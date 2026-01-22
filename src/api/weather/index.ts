@@ -1,7 +1,7 @@
 import type { Result } from "@/types"
 import { type WeatherData, WeatherDataApiResponseSchema, WeatherDataSchema } from "@/api/weather/schema"
 
-export async function getWeatherData({ latitude, longitude }: {
+export async function fetchWeatherData({ latitude, longitude }: {
     latitude: number,
     longitude: number
 }, signal: AbortSignal): Promise<Result<WeatherData>> {
@@ -10,7 +10,7 @@ export async function getWeatherData({ latitude, longitude }: {
         longitude: `${longitude}`,
         daily: "weather_code,temperature_2m_max,temperature_2m_min",
         hourly: "temperature_2m,weather_code",
-        current: "weather_code,temperature_2m",
+        current: "weather_code,temperature_2m,relative_humidity_2m,precipitation,apparent_temperature,wind_speed_10m",
         timezone: "auto"
     })
     const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`, { signal })

@@ -6,8 +6,12 @@ export const WeatherDataApiResponseSchema = z.object({
     timezone: z.string(),
     current: z.object({
         time: z.string(),
-        temperature_2m: z.number(),
         weather_code: z.number(),
+        temperature_2m: z.number(),
+        apparent_temperature: z.number(),
+        relative_humidity_2m: z.number(),
+        wind_speed_10m: z.number(),
+        precipitation: z.number(),
     }),
     hourly: z.object({
         time: z.array(z.string()),
@@ -51,8 +55,12 @@ export const WeatherDataSchema = WeatherDataApiResponseSchema.transform((data) =
         infos: {
             current: {
                 time: new Date(data.current.time),
-                temperature: data.current.temperature_2m,
                 weather_code: data.current.weather_code,
+                temperature: data.current.temperature_2m,
+                feel_like: data.current.apparent_temperature,
+                humidity: data.current.relative_humidity_2m,
+                wind_speed: data.current.wind_speed_10m,
+                precipitation: data.current.precipitation
             },
             forecast: {
                 daily: dailyForecast,

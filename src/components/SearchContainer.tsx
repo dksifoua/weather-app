@@ -1,10 +1,12 @@
-import { type ChangeEvent, type JSX, useState } from "react"
+import { type ChangeEvent, type JSX, useEffect, useState } from "react"
 import SearchIcon from "@/assets/images/icon-search.svg"
 import LoadingIcon from "@/assets/images/icon-loading.svg"
 import type { GeoLocation } from "@/api/geocoding/schema"
 import { useGlobalStore } from "@/store"
 import { useFetch } from "@/hooks/fetch.hook"
-import { getMatchingLocation } from "@/api/geocoding"
+import { fetchMatchingLocation } from "@/api/geocoding"
+import { useShallow } from "zustand/react/shallow"
+import type { Coordinates, Nullable } from "@/types"
 
 export function SearchContainer(): JSX.Element {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
@@ -13,11 +15,29 @@ export function SearchContainer(): JSX.Element {
         setFetchedData: setMatchedLocations,
         isLoading,
         fetchParameter: searchInput, setFetchParameter: setSearchInput
-    } = useFetch<string, GeoLocation[]>(getMatchingLocation)
+    } = useFetch<string, GeoLocation[]>(fetchMatchingLocation)
 
-    const [searchLocation, setSearchLocation] = useState<GeoLocation | null>(null)
+    const [searchLocation, setSearchLocation] = useState<Nullable<GeoLocation>>(null)
 
-    const setCoordinates = useGlobalStore((state) => state.setCoordinates)
+    const { fetchWeatherDataFunction } = useGlobalStore(
+        useShallow((state) => ({
+            fetchWeatherDataFunction: state.fetchDataFunction,
+        }))
+    )
+    const [coordinates, setCoordinates] = useState<Nullable<Coordinates>>(null)
+
+    useEffect(() => {
+        if (coordinates === null) return
+
+        const abortController = new AbortController()
+        const signal = abortController.signal
+
+        fetchWeatherDataFunction(coordinates, signal)
+
+        return () => {
+            abortController.abort()
+        }
+    }, [fetchWeatherDataFunction, coordinates])
 
     function searchInputOnChange(event: ChangeEvent<HTMLInputElement>): void {
         const value: string = event.target.value
@@ -41,6 +61,8 @@ export function SearchContainer(): JSX.Element {
     function handleSearch(): void {
         if (searchLocation) {
             setCoordinates({ latitude: searchLocation.latitude, longitude: searchLocation.longitude })
+            setSearchInput(null)
+            setSearchLocation(null)
         }
     }
 

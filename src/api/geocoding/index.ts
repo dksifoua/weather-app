@@ -6,7 +6,7 @@ import {
 } from "@/api/geocoding/schema"
 import type { Result } from "@/types"
 
-export async function getMatchingLocation(searchTerm: string, signal: AbortSignal): Promise<Result<GeoLocation[]>> {
+export async function fetchMatchingLocation(searchTerm: string, signal: AbortSignal): Promise<Result<GeoLocation[]>> {
     const params = new URLSearchParams({
         name: searchTerm,
         count: "20",

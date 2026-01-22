@@ -22,9 +22,11 @@ Responsive weather app with search functionality, unit conversion, and detailed 
 - View the optimal layout for the interface depending on their device's screen size
 - See hover and focus states for all interactive elements on the page
 
-## Setup
+## Run the application
 
-- **Serve original source code (unbundled):**
+I used Bun (v1.3.6) to build this application, and I suggest to it to run it. If you don't have Bun installed, you can download it from [here](https://bun.sh/).
+
+- **By serving the original source code (unbundled):**
 
 ```bash
 git clone https://github.com/dksifoua/weather-app.git
@@ -33,7 +35,7 @@ bun install
 bun run dev
 ```
 
-- **Serve the production version:**
+- **by serving the production version:**
 
 ```bash
 git clone https://github.com/dksifoua/weather-app.git
@@ -45,11 +47,12 @@ bun run preview
 
 ## Tech Stack
 
-- **Frontend Core:** [React](https://react.dev/) 19 (Hooks & Context API) with [TypeScript](https://www.typescriptlang.org/) for type-safe development.
+- **Frontend Core:** [React](https://react.dev/) 19 with [TypeScript](https://www.typescriptlang.org/) for type-safe development.
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/) 4.1 for a modern, utility-first UI design.
-- **Data Management:** [Zod](https://zod.dev/) for schema-driven API validation and the native Fetch API for lightweight network requests.
+- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/) for global state management.
+- **Data Management:** [Zod](https://zod.dev/) for schema-driven API validation and the native Fetch API for network requests.
 - **Build Tooling:** [Vite](https://vitejs.dev/) for an optimized development environment and fast bundling.
-- **CI/CD & Infrastructure:** [GitHub Actions](https://github.com/features/actions) for automated Build/Deploy pipelines, hosted on [GitHub Pages](https://pages.github.com/).
+- **CI/CD & Infrastructure:** [GitHub Actions](https://github.com/features/actions) for automated Build & Deploy pipelines, hosted on [GitHub Pages](https://pages.github.com/).
 
 ## Author
 
