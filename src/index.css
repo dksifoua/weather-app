@@ -156,6 +156,10 @@
         letter-spacing: 0;
     }
 
+    .spin-slow {
+        animation: spin 2s linear infinite;
+    }
+
     .bg-today-small {
         background-image: url("assets/images/bg-today-small.svg");
         background-repeat: no-repeat;

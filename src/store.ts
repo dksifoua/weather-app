@@ -2,17 +2,15 @@ import { create } from "zustand/react"
 import type { Coordinates, MeasureType, Nullable, Units, UnitSystem } from "@/types"
 
 type GlobalStore = {
-    coordinates: Nullable<Coordinates>
-    setCoordinates: (coordinates: Coordinates) => void
     unitSystem: UnitSystem
     switchUnitSystem: () => void
     units: Units
     switchUnit: (measure: MeasureType) => void
+    coordinates: Nullable<Coordinates>
+    setCoordinates: (coordinates: Coordinates) => void
 }
 
 export const useGlobalStore = create<GlobalStore>((set) => ({
-    coordinates: null,
-    setCoordinates: (coordinates) => set({ coordinates }),
     unitSystem: "metric",
     switchUnitSystem: () => set((store) => {
         const unitSystem = store.unitSystem === "metric" ? "imperial" : "metric"
@@ -38,7 +36,9 @@ export const useGlobalStore = create<GlobalStore>((set) => ({
                 return { unitSystem, units: { ...store.units, precipitation } }
             }
         }
-    })
+    }),
+    coordinates: null,
+    setCoordinates: (coordinates) => set({ coordinates }),
 }))
 
 function getUnitSystem(units: Units, defaultUnitSystem: UnitSystem): UnitSystem {
