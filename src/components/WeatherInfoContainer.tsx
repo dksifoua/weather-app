@@ -1,7 +1,7 @@
 import { type JSX } from "react"
 import SunnyIcon from "@/assets/images/icon-sunny.webp"
-import { useUnits } from "@/hooks/units.hook"
 import type { MeasureType, Nullable } from "@/types"
+import { useGlobalStore } from "@/store"
 
 export function WeatherInfoContainer(): JSX.Element {
 
@@ -11,7 +11,7 @@ export function WeatherInfoContainer(): JSX.Element {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-x-5 xl:gap-x-6">
                 <WeatherDetail measureType="temperature" label="Feels Like" value={18}/>
                 <WeatherDetail measureType={null} label="Humidity" value={48}/>
-                <WeatherDetail measureType="wind-speed" label="Wind" value={14}/>
+                <WeatherDetail measureType="windspeed" label="Wind" value={14}/>
                 <WeatherDetail measureType="precipitation" label="Precipitation" value={0}/>
             </div>
         </div>
@@ -39,18 +39,18 @@ function WeatherInfo({ location, date, temperature }: {
 }
 
 function WeatherDetail({ measureType, label, value }: { measureType: Nullable<MeasureType>, label: string, value: number }): JSX.Element {
-    const { temperatureUnit, windSpeedUnit, precipitationUnit } = useUnits()
+    const units = useGlobalStore((store) => store.units)
 
     let unitLabel: string
     switch (measureType) {
         case "temperature":
-            unitLabel = temperatureUnit == "celsius" ? "°C" : "°F"
+            unitLabel = units.temperature == "celsius" ? "°C" : "°F"
             break
-        case "wind-speed":
-            unitLabel = windSpeedUnit
+        case "windspeed":
+            unitLabel = units.windspeed
             break
         case "precipitation":
-            unitLabel = precipitationUnit
+            unitLabel = units.precipitation
             break
         default:
             unitLabel = "%"

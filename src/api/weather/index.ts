@@ -4,7 +4,7 @@ import { type WeatherData, WeatherDataApiResponseSchema, WeatherDataSchema } fro
 export async function getWeatherData({ latitude, longitude }: {
     latitude: number,
     longitude: number
-}): Promise<Result<WeatherData>> {
+}, signal: AbortSignal): Promise<Result<WeatherData>> {
     const params = new URLSearchParams({
         latitude: `${latitude}`,
         longitude: `${longitude}`,
@@ -13,7 +13,7 @@ export async function getWeatherData({ latitude, longitude }: {
         current: "weather_code,temperature_2m",
         timezone: "auto"
     })
-    const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`)
+    const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`, { signal })
     if (response.status !== 200) {
         return { success: false, error: new Error("Failed to fetch weather data.") }
     }

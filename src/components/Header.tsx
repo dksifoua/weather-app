@@ -1,12 +1,12 @@
-import { type Dispatch, type JSX, useRef, useState } from "react"
+import { type JSX, useRef, useState } from "react"
 import Logo from "@/assets/images/logo.svg"
 import UnitsIcon from "@/assets/images/icon-units.svg"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import CheckMarkIcon from "@/assets/images/icon-checkmark.svg"
-import { useUnits, useUnitsDispatcher } from "@/hooks/units.hook"
-import type { UnitsAction } from "@/contexts/units.context"
 import type { MeasureType, UnitFor } from "@/types"
 import { useCloseDropdown } from "@/hooks/dropdown.hook"
+import { useGlobalStore } from "@/store"
+import { useShallow } from "zustand/react/shallow"
 
 export function Header(): JSX.Element {
 
@@ -40,30 +40,35 @@ function SettingsContainer(): JSX.Element {
 }
 
 function UnitDropdown(): JSX.Element {
-    const { unitSystem, temperatureUnit, windSpeedUnit, precipitationUnit } = useUnits()
-    const dispatch: Dispatch<UnitsAction> = useUnitsDispatcher()
+    const { unitSystem, switchUnitSystem, units } = useGlobalStore(
+        useShallow((state) => ({
+            unitSystem: state.unitSystem,
+            switchUnitSystem: state.switchUnitSystem,
+            units: state.units
+        }))
+    )
 
     return (
         <div
             className="w-70 h-auto flex flex-col gap-y-1 px-2 py-1.5 rounded-12 bg-neutral-800 absolute right-0 top-10 md:top-14 z-20"
         >
-            <button onClick={() => dispatch({ type: "SWITCH_UNIT_SYSTEM" })}
+            <button onClick={switchUnitSystem}
                     className="h-10 px-2 py-2.5 text-preset-7 rounded-8 cursor-pointer border-focus-neutral">
                 Switch to <span className="capitalize">{unitSystem === "metric" ? "imperial" : "metric"}</span>
             </button>
             <UnitDropdownOption measureType="temperature" label="Temperature" options={[
-                { selected: temperatureUnit === "celsius", unit: "celsius", description: "Celsius (°C)" },
-                { selected: temperatureUnit === "fahrenheit", unit: "fahrenheit", description: "Fahrenheit (°F)" }
+                { selected: units.temperature === "celsius", unit: "celsius", description: "Celsius (°C)" },
+                { selected: units.temperature === "fahrenheit", unit: "fahrenheit", description: "Fahrenheit (°F)" }
             ]}/>
             <div className="h-px bg-neutral-600"/>
-            <UnitDropdownOption measureType="wind-speed" label="Wind Speed" options={[
-                { selected: windSpeedUnit === "km/h", unit: "km/h", description: "Kilometers per hour (km/h)" },
-                { selected: windSpeedUnit === "mph", unit: "mph", description: "Miles per hour (mph)" }
+            <UnitDropdownOption measureType="windspeed" label="Wind Speed" options={[
+                { selected: units.windspeed === "km/h", unit: "km/h", description: "Kilometers per hour (km/h)" },
+                { selected: units.windspeed === "mph", unit: "mph", description: "Miles per hour (mph)" }
             ]}/>
             <div className="h-px bg-neutral-600"/>
             <UnitDropdownOption measureType="precipitation" label="Precipitation" options={[
-                { selected: precipitationUnit === "mm", unit: "mm", description: "Millimeters (mm)" },
-                { selected: precipitationUnit === "in", unit: "in", description: "Inches (in)" }
+                { selected: units.precipitation === "mm", unit: "mm", description: "Millimeters (mm)" },
+                { selected: units.precipitation === "in", unit: "in", description: "Inches (in)" }
             ]}/>
         </div>
     )
@@ -74,7 +79,7 @@ function UnitDropdownOption({ measureType, label, options }: {
     label: string,
     options: { selected: boolean, unit: UnitFor<MeasureType>, description: string }[]
 }): JSX.Element {
-    const dispatch: Dispatch<UnitsAction> = useUnitsDispatcher()
+    const switchUnit = useGlobalStore((store) => store.switchUnit)
 
     return (
         <div className="flex flex-col gap-y-2">
@@ -83,7 +88,7 @@ function UnitDropdownOption({ measureType, label, options }: {
                 options.map((option, index) => (
                     <button
                         key={index}
-                        onClick={() => !option.selected && dispatch({ type: "SWITCH_MEASURE_UNIT", payload: { measureType } })}
+                        onClick={() => !option.selected && switchUnit(measureType)}
                         className={`h-10 flex flex-row gap-x-2.5 px-2 py-2.5 rounded-8 items-center justify-between ${
                             option.selected ? "bg-neutral-700" : "cursor-pointer border-focus-neutral"
                         }`}

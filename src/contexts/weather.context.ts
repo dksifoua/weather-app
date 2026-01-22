@@ -2,9 +2,7 @@ import { createContext, type Dispatch } from "react"
 import type { WeatherData } from "@/api/weather/schema"
 import type { Nullable } from "@/types"
 
-export type WeatherContextType = Nullable<WeatherData>
-
-export const WeatherContext = createContext<WeatherContextType>(null)
+export const WeatherContext = createContext<Nullable<WeatherData>>(null)
 
 export type WeatherAction =
     | { type: "SET_DATA", payload: WeatherData }
