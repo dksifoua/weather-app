@@ -12,18 +12,18 @@ export function WeatherInfoContainer(): JSX.Element {
     )
 
     if (weatherData === null) return <div></div>
-    const { time, weather_code, temperature, feel_like, humidity, wind_speed, precipitation } = weatherData.infos.current
+    const { date, weather_code, temperature, feel_like, humidity, wind_speed, precipitation } = weatherData.infos.current
 
     return (
-        <div className="flex flex-col gap-y-5 xl:gap-y-8">
-            <WeatherInfo location="Berlin, Germany" date={time} temperature={temperature} icon={getIcon(weather_code)}/>
+        <section className="flex flex-col gap-y-5 xl:gap-y-8">
+            <WeatherInfo location="Berlin, Germany" date={date} temperature={temperature} icon={getIcon(weather_code)}/>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-x-5 xl:gap-x-6">
                 <WeatherDetail measureType="temperature" label="Feels Like" value={feel_like}/>
                 <WeatherDetail measureType={null} label="Humidity" value={humidity}/>
                 <WeatherDetail measureType="windspeed" label="Wind" value={wind_speed}/>
                 <WeatherDetail measureType="precipitation" label="Precipitation" value={precipitation}/>
             </div>
-        </div>
+        </section>
     )
 }
 

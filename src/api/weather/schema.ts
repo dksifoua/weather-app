@@ -32,7 +32,7 @@ export const WeatherDataSchema = WeatherDataApiResponseSchema.transform((data) =
     const dailyForecast = []
     for (const [index, time] of daily.time.entries()) {
         dailyForecast.push({
-            time: new Date(time),
+            date: new Date(time),
             weather_code: daily.weather_code[index],
             temperature_max: daily.temperature_2m_max[index],
             temperature_min: daily.temperature_2m_min[index],
@@ -42,7 +42,7 @@ export const WeatherDataSchema = WeatherDataApiResponseSchema.transform((data) =
     const hourlyForecast = []
     for (const [index, time] of hourly.time.entries()) {
         hourlyForecast.push({
-            time: new Date(time),
+            datetime: new Date(time),
             weather_code: hourly.weather_code[index],
             temperature: hourly.temperature_2m[index],
         })
@@ -54,7 +54,7 @@ export const WeatherDataSchema = WeatherDataApiResponseSchema.transform((data) =
         timezone: data.timezone,
         infos: {
             current: {
-                time: new Date(data.current.time),
+                date: new Date(data.current.time),
                 weather_code: data.current.weather_code,
                 temperature: data.current.temperature_2m,
                 feel_like: data.current.apparent_temperature,

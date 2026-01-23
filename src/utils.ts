@@ -37,7 +37,7 @@ export function convertWeatherData({ from, data, to }: { from: Units, data: Null
         ...data,
         infos: {
             current: {
-                time: data.infos.current.time,
+                date: data.infos.current.date,
                 weather_code: data.infos.current.weather_code,
                 temperature: convertMeasure(from.temperature, data.infos.current.temperature, to.temperature),
                 feel_like: convertMeasure(from.temperature, data.infos.current.feel_like, to.temperature),
@@ -45,7 +45,19 @@ export function convertWeatherData({ from, data, to }: { from: Units, data: Null
                 wind_speed: convertMeasure(from.windspeed, data.infos.current.wind_speed, to.windspeed),
                 precipitation: convertMeasure(from.precipitation, data.infos.current.precipitation, to.precipitation),
             },
-            forecast: data.infos.forecast
+            forecast: {
+                daily: data.infos.forecast.daily.map((forecast) => ({
+                    date: forecast.date,
+                    weather_code: forecast.weather_code,
+                    temperature_min: convertMeasure(from.temperature, forecast.temperature_min, to.temperature),
+                    temperature_max: convertMeasure(from.temperature, forecast.temperature_max, to.temperature),
+                })),
+                hourly: data.infos.forecast.hourly.map((forecast) => ({
+                    datetime: forecast.datetime,
+                    weather_code: forecast.weather_code,
+                    temperature: convertMeasure(from.temperature, forecast.temperature, to.temperature),
+                })),
+            }
         },
     }
 }
