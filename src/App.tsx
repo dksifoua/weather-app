@@ -19,7 +19,7 @@ export function App(): JSX.Element {
                         <DailyForecastContainer/>
                     </div>
                     <div className="xl:basis-3/10">
-                        <HourlyForecastContainer date={new Date()}/>
+                        <HourlyForecastContainer/>
                     </div>
                 </div>
             </main>

@@ -1,60 +1,108 @@
-import { type JSX, useRef, useState } from "react"
+import { type Dispatch, type JSX, type SetStateAction, useEffect, useRef, useState } from "react"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
-import SunnyIcon from "@/assets/images/icon-sunny.webp"
-import { useCloseDropdown } from "@/hooks/close-dropdown.hook"
+import { useCloseDropdown } from "@/hooks/dropdown.hook"
+import { useGlobalStore } from "@/store"
+import { useShallow } from "zustand/react/shallow"
+import type { WeatherData } from "@/api/weather/schema"
+import type { Nullable } from "@/types"
+import { getIcon } from "@/utils"
 
-const daysOfWeek: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+type WeatherDataHourlyForecast = WeatherData["infos"]["forecast"]["hourly"][number]
+const weekdayFormatter = new Intl.DateTimeFormat("en-US", { weekday: "long" })
+const hourFormatter = new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: true })
 
-export function HourlyForecastContainer({ date }: { date: Date }): JSX.Element {
+export function HourlyForecastContainer(): JSX.Element {
     const ref = useRef<HTMLDivElement>(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+    const { weatherData } = useGlobalStore(
+        useShallow((store) => ({
+            weatherData: store.fetchedData
+        }))
+    )
+    const [selectedDate, setSelectedDate] = useState<Nullable<Date>>(null)
 
     useCloseDropdown(ref, (): void => setIsDropdownOpen(false))
 
+    useEffect(() => {
+        setSelectedDate(weatherData?.infos.current.date ?? null)
+    }, [weatherData])
+
+    if (weatherData === null || selectedDate === null) return <div></div>
+
+    const forecasts: WeatherDataHourlyForecast[] = weatherData.infos.forecast.hourly
+    const uniqueDates = [
+        ...new Set(
+            forecasts.map(
+                (forecast: WeatherDataHourlyForecast): string => forecast.datetime.toISOString().slice(0, 10)
+            )
+        )
+    ].map((value: string): Date => new Date(value))
+
     return (
-            <div className="h-full flex flex-col gap-y-4 px-4 md:px-6 py-5 md:py-6 rounded-20 bg-neutral-800">
-                <div className="relative" ref={ref}>
-                    <div className="flex flex-row items-center justify-between">
-                        <p className="text-preset-5">Hourly Forecast</p>
-                        <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                             className="flex flex-row gap-x-3 px-4 py-2 rounded-8 bg-neutral-600 cursor-pointer items-center border-focus-neutral"
-                        >
-                            <p className="text-preset-7 ">{daysOfWeek[date.getDay()]}</p>
-                            <img src={DropdownIcon} alt="Dropdown icon"
-                                 className={`w-3 h-4.5 transform ${isDropdownOpen ? '-rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`}/>
-                        </button>
-                    </div>
-                    {isDropdownOpen && <DaysDropdown date={date}/>}
+        <aside className="h-full xl:max-h-173.25 overflow-y-auto flex flex-col gap-y-4 px-4 md:px-6 py-5 md:py-6 rounded-20 bg-neutral-800">
+            <div className="relative" ref={ref}>
+                <div className="flex flex-row items-center justify-between">
+                    <p className="text-preset-5">Hourly Forecast</p>
+                    <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            className="flex flex-row gap-x-3 px-4 py-2 rounded-8 bg-neutral-600 cursor-pointer items-center border-focus-neutral"
+                    >
+                        <p className="text-preset-7 ">{weekdayFormatter.format(selectedDate)}</p>
+                        <img src={DropdownIcon} alt="Dropdown icon"
+                             className={`w-3 h-4.5 transform ${isDropdownOpen ? '-rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`}/>
+                    </button>
                 </div>
-                <HourlyWeatherCard/>
-                <HourlyWeatherCard/>
-                <HourlyWeatherCard/>
-                <HourlyWeatherCard/>
-                <HourlyWeatherCard/>
+                {isDropdownOpen &&
+                    <DaysDropdown selectedDate={selectedDate} setSelectedDate={setSelectedDate} dates={uniqueDates.slice(1, 8)}/>}
             </div>
+            {
+                forecasts
+                    .filter((forecast: WeatherDataHourlyForecast) => (
+                        forecast.datetime.getDate() === selectedDate.getDate()
+                        && forecast.datetime >= weatherData.infos.current.date
+                    ))
+                    .map((forecast: WeatherDataHourlyForecast, index: number) => {
+                        return <HourlyWeatherCard key={index} data={forecast}/>
+                    })
+            }
+        </aside>
     )
 }
 
-function HourlyWeatherCard(): JSX.Element {
+function HourlyWeatherCard({ data }: { data: WeatherDataHourlyForecast }): JSX.Element {
+    const { datetime, weather_code, temperature } = data
 
     return (
-        <div className="h-15 flex flex-row gap-x-2 pl-3 pr-4 py-2.5 rounded-8 bg-neutral-700 border border-neutral-600 items-center justify-between">
-            <img src={SunnyIcon} alt="Sunny Icon" className="w-10 h-10"/>
-            <p className="w-full text-preset-5">3 PM</p>
-            <p className="text-preset-7">68°</p>
+        <div
+            className="h-15 flex flex-row gap-x-2 pl-3 pr-4 py-2.5 rounded-8 bg-neutral-700 border border-neutral-600 items-center justify-between">
+            <img src={getIcon(weather_code)} alt="Sunny Icon" className="w-10 h-10"/>
+            <p className="w-full text-preset-5">{hourFormatter.format(datetime)}</p>
+            <p className="text-preset-7">{temperature}°</p>
         </div>
     )
 }
 
-function DaysDropdown({ date }: { date: Date }): JSX.Element {
-    const selectedDay = daysOfWeek[date.getDay()]
+function DaysDropdown({ selectedDate, setSelectedDate, dates }: {
+    selectedDate: Date,
+    setSelectedDate: Dispatch<SetStateAction<Nullable<Date>>>,
+    dates: Date[]
+}): JSX.Element {
+    const selectedDay = weekdayFormatter.format(selectedDate)
 
     return (
-        <div className="w-53.5 flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-600 absolute right-0 top-12">
+        <div
+            className="w-53.5 flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-600 absolute right-0 top-12"
+        >
             {
-                daysOfWeek.map((day: string, index: number) => {
+                dates.map((date: Date, index: number) => {
+                    const day = weekdayFormatter.format(date)
+
                     return (
-                        <div key={index} className={`h-10 px-2 py-2.5 flex flex-row items-center justify-between ${day === selectedDay ? "rounded-8 bg-neutral-700" : "hover:rounded-8 hover:bg-neutral-700"}`}>
+                        <div key={index} onClick={() => setSelectedDate(date)}
+                             className={`h-10 px-2 py-2.5 flex flex-row items-center justify-between ${
+                                 day === selectedDay
+                                     ? "rounded-8 bg-neutral-700 cursor-pointer"
+                                     : "hover:rounded-8 hover:bg-neutral-700"
+                             }`}>
                             <p>{day}</p>
                         </div>
                     )

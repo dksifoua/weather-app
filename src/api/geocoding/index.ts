@@ -6,14 +6,14 @@ import {
 } from "@/api/geocoding/schema"
 import type { Result } from "@/types"
 
-export async function getMatchingLocation(searchTerm: string): Promise<Result<GeoLocation[]>> {
+export async function fetchMatchingLocation(searchTerm: string, signal: AbortSignal): Promise<Result<GeoLocation[]>> {
     const params = new URLSearchParams({
         name: searchTerm,
         count: "20",
         language: "en",
         format: "json"
     })
-    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params}`)
+    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params}`, { signal })
     if (response.status !== 200) {
         return { success: false, error: new Error("Failed to fetch geocoding data.") }
     }
