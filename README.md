@@ -22,9 +22,9 @@ Responsive weather app with search functionality, unit conversion, and detailed 
 - View the optimal layout for the interface depending on their device's screen size
 - See hover and focus states for all interactive elements on the page
 
-## Run the application
+## Run the application locally
 
-I used Bun (v1.3.6) to build this application, and I suggest to it to run it. If you don't have Bun installed, you can download it from [here](https://bun.sh/).
+The application is built and tested with **[Bun](https://bun.sh) (v1.3.6)**. While other runtimes may work, I recommended using Bun to install dependencies and run the project.
 
 - **By serving the original source code (unbundled):**
 

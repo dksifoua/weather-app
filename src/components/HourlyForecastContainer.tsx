@@ -76,7 +76,7 @@ function HourlyWeatherCard({ data }: { data: WeatherDataHourlyForecast }): JSX.E
             className="h-15 flex flex-row gap-x-2 pl-3 pr-4 py-2.5 rounded-8 bg-neutral-700 border border-neutral-600 items-center justify-between">
             <img src={getIcon(weather_code)} alt="Sunny Icon" className="w-10 h-10"/>
             <p className="w-full text-preset-5">{hourFormatter.format(datetime)}</p>
-            <p className="text-preset-7">{temperature}°</p>
+            <p className="text-preset-7">{Math.floor(temperature)}°</p>
         </div>
     )
 }
