@@ -4,14 +4,17 @@ import { useGlobalStore } from "@/store"
 import { getIcon } from "@/utils"
 import { useShallow } from "zustand/react/shallow"
 import { fetchLocation } from "@/api/geocoding"
+import LoadingIcon from "@/assets/images/icon-loading.svg"
 
 export function WeatherInfoContainer(): JSX.Element {
-    const { weatherData } = useGlobalStore(
+    const { weatherData, isLoading } = useGlobalStore(
         useShallow((store) => ({
-            weatherData: store.fetchedData
+            weatherData: store.fetchedData,
+            isLoading: store.isLoading
         }))
     )
 
+    if (isLoading) return <WeatherInfoContainerLoading/>
     if (weatherData === null) return <div></div>
 
     const { latitude, longitude } = weatherData
@@ -25,6 +28,24 @@ export function WeatherInfoContainer(): JSX.Element {
                 <WeatherDetail measureType={null} label="Humidity" value={humidity}/>
                 <WeatherDetail measureType="windspeed" label="Wind" value={wind_speed}/>
                 <WeatherDetail measureType="precipitation" label="Precipitation" value={precipitation}/>
+            </div>
+        </section>
+    )
+}
+
+function WeatherInfoContainerLoading(): JSX.Element {
+    
+    return (
+        <section className="flex flex-col gap-y-5 xl:gap-y-8">
+            <div className="flex flex-col gap-y-4 px-6 py-10 rounded-20 bg-today-small md:bg-today-large h-71.5 justify-center items-center">
+                <img src={LoadingIcon} alt="Loading Icon" className="w-10 h-10 spin-slow"/>
+                <p className="text-preset-6">Loading...</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-x-5 xl:gap-x-6">
+                <WeatherDetailLoading/>
+                <WeatherDetailLoading/>
+                <WeatherDetailLoading/>
+                <WeatherDetailLoading/>
             </div>
         </section>
     )
@@ -104,6 +125,14 @@ function WeatherDetail({ measureType, label, value }: { measureType: Nullable<Me
         <div className="h-29.5 flex flex-col gap-y-6 p-5 rounded-12 bg-neutral-800 border-neutral-600 border">
             <p className="text-preset-6">{label}</p>
             <p className="text-preset-3">{Math.floor(value)} {unitLabel}</p>
+        </div>
+    )
+}
+
+function WeatherDetailLoading(): JSX.Element {
+    return (
+        <div className="h-29.5 flex flex-col gap-y-6 p-5 rounded-12 bg-neutral-800 border-neutral-600 border justify-center items-center">
+            <img src={LoadingIcon} alt="Loading Icon" className="w-10 h-10 spin-slow"/>
         </div>
     )
 }

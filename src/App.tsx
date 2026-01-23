@@ -4,8 +4,15 @@ import { SearchContainer } from "@/components/SearchContainer"
 import { WeatherInfoContainer } from "@/components/WeatherInfoContainer"
 import { DailyForecastContainer } from "@/components/DailyForecastContainer"
 import { HourlyForecastContainer } from "@/components/HourlyForecastContainer"
+import { useGlobalStore } from "@/store"
+import { useShallow } from "zustand/react/shallow"
 
 export function App(): JSX.Element {
+    const { weatherData } = useGlobalStore(
+        useShallow((store) => ({
+            weatherData: store.fetchedData
+        }))
+    )
 
     return (
         <>
@@ -13,15 +20,20 @@ export function App(): JSX.Element {
             <p className="text-preset-2 text-center md:w-96 xl:w-183 md:mx-auto">How's the sky looking today?</p>
             <main className="flex flex-col gap-y-8 xl:gap-y-12">
                 <SearchContainer/>
-                <div className="flex flex-col xl:flex-row gap-y-8 xl:gap-x-8">
-                    <div className="xl:basis-7/10 flex flex-col gap-y-8 xl:gap-y-12">
-                        <WeatherInfoContainer/>
-                        <DailyForecastContainer/>
-                    </div>
-                    <div className="xl:basis-3/10">
-                        <HourlyForecastContainer/>
-                    </div>
-                </div>
+                {
+                    weatherData === null
+                        ? <p className="text-preset-4 text-center">No search result!</p>
+                        : <div className="flex flex-col xl:flex-row gap-y-8 xl:gap-x-8">
+                            <div className="xl:basis-7/10 flex flex-col gap-y-8 xl:gap-y-12">
+                                <WeatherInfoContainer/>
+                                <DailyForecastContainer/>
+                            </div>
+                            <div className="xl:basis-3/10">
+                                <HourlyForecastContainer/>
+                            </div>
+                        </div>
+                }
+
             </main>
         </>
     )

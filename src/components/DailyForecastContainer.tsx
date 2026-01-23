@@ -3,13 +3,15 @@ import { useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
 import type { WeatherData } from "@/api/weather/schema"
 import { getIcon } from "@/utils"
+import LoadingIcon from "@/assets/images/icon-loading.svg"
 
 type WeatherDataDailyForecast = WeatherData["infos"]["forecast"]["daily"][number]
 
 export function DailyForecastContainer(): JSX.Element {
-    const { weatherData } = useGlobalStore(
+    const { weatherData, isLoading } = useGlobalStore(
         useShallow((store) => ({
-            weatherData: store.fetchedData
+            weatherData: store.fetchedData,
+            isLoading: store.isLoading
         }))
     )
 
@@ -22,9 +24,11 @@ export function DailyForecastContainer(): JSX.Element {
             <p className="text-preset-5">Daily Forecast</p>
             <div className="grid grid-cols-3 md:grid-cols-7 gap-4">
                 {
-                    forecasts.map((forecast, index) => (
-                        <WeatherCard key={index} forecast={forecast}/>
-                    ))
+                    isLoading
+                        ? Array.from({ length: 7 }, () => <WeatherCardLoading/>)
+                        : forecasts.map((forecast, index) => (
+                            <WeatherCard key={index} forecast={forecast}/>
+                        ))
                 }
             </div>
         </section>
@@ -43,6 +47,16 @@ function WeatherCard({ forecast }: { forecast: WeatherDataDailyForecast }): JSX.
                 <p className="text-preset-7">{Math.floor(forecast.temperature_min)}°</p>
                 <p className="text-preset-7">{Math.floor(forecast.temperature_max)}°</p>
             </div>
+        </div>
+    )
+}
+
+function WeatherCardLoading(): JSX.Element {
+
+    return (
+        <div
+            className="h-41.25 flex flex-col gap-y-4 px-2.5 py-4 rounded-12 bg-neutral-800 border border-neutral-600 justify-center items-center">
+            <img src={LoadingIcon} alt="Loading Icon" className="w-10 h-10 spin-slow"/>
         </div>
     )
 }

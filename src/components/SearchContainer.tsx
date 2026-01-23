@@ -43,6 +43,7 @@ export function SearchContainer(): JSX.Element {
         const value: string = event.target.value
         setSearchInput(value)
         setSearchLocation(null)
+        setError(null)
 
         if (value.length < 2) {
             setIsDropdownOpen(false)

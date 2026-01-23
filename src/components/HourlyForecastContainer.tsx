@@ -6,6 +6,7 @@ import { useShallow } from "zustand/react/shallow"
 import type { WeatherData } from "@/api/weather/schema"
 import type { Nullable } from "@/types"
 import { getIcon } from "@/utils"
+import LoadingIcon from "@/assets/images/icon-loading.svg"
 
 type WeatherDataHourlyForecast = WeatherData["infos"]["forecast"]["hourly"][number]
 const weekdayFormatter = new Intl.DateTimeFormat("en-US", { weekday: "long" })
@@ -14,9 +15,10 @@ const hourFormatter = new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12
 export function HourlyForecastContainer(): JSX.Element {
     const ref = useRef<HTMLDivElement>(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
-    const { weatherData } = useGlobalStore(
+    const { weatherData, isLoading } = useGlobalStore(
         useShallow((store) => ({
-            weatherData: store.fetchedData
+            weatherData: store.fetchedData,
+            isLoading: store.isLoading
         }))
     )
     const [selectedDateOverride, setSelectedDateOverride] = useState<Nullable<Date>>(null)
@@ -24,6 +26,7 @@ export function HourlyForecastContainer(): JSX.Element {
 
     useCloseDropdown(ref, (): void => setIsDropdownOpen(false))
 
+    if (isLoading) return <HourlyForecastContainerLoading/>
     if (weatherData === null || selectedDate === null) return <div></div>
 
     const forecasts: WeatherDataHourlyForecast[] = weatherData.infos.forecast.hourly
@@ -36,7 +39,8 @@ export function HourlyForecastContainer(): JSX.Element {
     ].map((value: string): Date => new Date(value))
 
     return (
-        <aside className="h-full xl:max-h-173.25 overflow-y-auto flex flex-col gap-y-4 px-4 md:px-6 py-5 md:py-6 rounded-20 bg-neutral-800">
+        <div
+            className="h-full xl:max-h-173.25 overflow-y-auto flex flex-col gap-y-4 px-4 md:px-6 py-5 md:py-6 rounded-20 bg-neutral-800">
             <div className="relative" ref={ref}>
                 <div className="flex flex-row items-center justify-between">
                     <p className="text-preset-5">Hourly Forecast</p>
@@ -49,7 +53,8 @@ export function HourlyForecastContainer(): JSX.Element {
                     </button>
                 </div>
                 {isDropdownOpen &&
-                    <DaysDropdown selectedDate={selectedDate} setSelectedDate={setSelectedDateOverride} dates={uniqueDates.slice(1, 8)}/>}
+                    <DaysDropdown selectedDate={selectedDate} setSelectedDate={setSelectedDateOverride}
+                                  dates={uniqueDates.slice(1, 8)}/>}
             </div>
             {
                 forecasts
@@ -61,7 +66,7 @@ export function HourlyForecastContainer(): JSX.Element {
                         return <HourlyWeatherCard key={index} data={forecast}/>
                     })
             }
-        </aside>
+        </div>
     )
 }
 
@@ -105,6 +110,21 @@ function DaysDropdown({ selectedDate, setSelectedDate, dates }: {
                     )
                 })
             }
+        </div>
+    )
+}
+
+function HourlyForecastContainerLoading(): JSX.Element {
+
+    return (
+        <div
+            className="h-full xl:max-h-173.25 flex flex-col gap-y-4 px-4 md:px-6 py-5 md:py-6 rounded-20 bg-neutral-800">
+            <div className="flex flex-row items-center justify-between">
+                <p className="text-preset-5">Hourly Forecast</p>
+            </div>
+            <div className="h-full flex justify-center items-center">
+                <img src={LoadingIcon} alt="Loading Icon" className="w-10 h-10 spin-slow"/>
+            </div>
         </div>
     )
 }
