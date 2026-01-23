@@ -21,3 +21,8 @@ export const GeoLocationSchema = GeoLocationApiResponseSchema.transform((item: z
     longitude: item.longitude,
 }))
 export type GeoLocation = z.infer<typeof GeoLocationSchema>
+
+export const ReverseGeocodingApiResponseSchema = z.object({
+    city: z.string(),
+    countryName: z.string(),
+})

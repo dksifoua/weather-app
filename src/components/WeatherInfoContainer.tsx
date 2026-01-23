@@ -1,8 +1,9 @@
-import { type JSX } from "react"
-import type { MeasureType, Nullable } from "@/types"
+import { type JSX, useEffect, useState } from "react"
+import type { Coordinates, MeasureType, Nullable, Result } from "@/types"
 import { useGlobalStore } from "@/store"
 import { getIcon } from "@/utils"
 import { useShallow } from "zustand/react/shallow"
+import { fetchLocation } from "@/api/geocoding"
 
 export function WeatherInfoContainer(): JSX.Element {
     const { weatherData } = useGlobalStore(
@@ -12,11 +13,13 @@ export function WeatherInfoContainer(): JSX.Element {
     )
 
     if (weatherData === null) return <div></div>
+
+    const { latitude, longitude } = weatherData
     const { date, weather_code, temperature, feel_like, humidity, wind_speed, precipitation } = weatherData.infos.current
 
     return (
         <section className="flex flex-col gap-y-5 xl:gap-y-8">
-            <WeatherInfo location="Berlin, Germany" date={date} temperature={temperature} icon={getIcon(weather_code)}/>
+            <WeatherInfo coordinates={{ latitude, longitude }} date={date} temperature={temperature} icon={getIcon(weather_code)}/>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-x-5 xl:gap-x-6">
                 <WeatherDetail measureType="temperature" label="Feels Like" value={feel_like}/>
                 <WeatherDetail measureType={null} label="Humidity" value={humidity}/>
@@ -27,12 +30,43 @@ export function WeatherInfoContainer(): JSX.Element {
     )
 }
 
-function WeatherInfo({ location, date, temperature, icon }: {
-    location: string,
+function WeatherInfo({ coordinates, date, temperature, icon }: {
+    coordinates: Coordinates,
     date: Date,
     temperature: number,
     icon: string
 }): JSX.Element {
+    const [location, setLocation] = useState<string>("")
+    const [, setIsLoading] = useState<boolean>(false)
+    const [, setError] = useState<Nullable<Error>>(null)
+
+    useEffect(() => {
+        const abortController = new AbortController()
+        const signal = abortController.signal
+
+        function fetchData() {
+            setIsLoading(true)
+            fetchLocation(coordinates, signal)
+                .then((result: Result<string>): void => {
+                    if (!signal.aborted) {
+                        if (result.success) setLocation(result.data)
+                        else setError(result.error)
+                    }
+                })
+                .catch((error) => {
+                    if (!signal.aborted) setError(error)
+                })
+                .finally(() => {
+                    if (!signal.aborted) setIsLoading(false)
+                })
+        }
+
+        fetchData()
+
+        return () => {
+            abortController.abort()
+        }
+    }, [coordinates])
 
     return (
         <div className="flex flex-col md:flex-row gap-y-4 md:gap-0 px-6 py-10 rounded-20 bg-today-small md:bg-today-large h-71.5 md:justify-between items-center">

@@ -1,4 +1,4 @@
-import { type Dispatch, type JSX, type SetStateAction, useEffect, useRef, useState } from "react"
+import { type Dispatch, type JSX, type SetStateAction, useRef, useState } from "react"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import { useCloseDropdown } from "@/hooks/dropdown.hook"
 import { useGlobalStore } from "@/store"
@@ -19,13 +19,10 @@ export function HourlyForecastContainer(): JSX.Element {
             weatherData: store.fetchedData
         }))
     )
-    const [selectedDate, setSelectedDate] = useState<Nullable<Date>>(null)
+    const [selectedDateOverride, setSelectedDateOverride] = useState<Nullable<Date>>(null)
+    const selectedDate = selectedDateOverride ?? weatherData?.infos.current.date ?? null
 
     useCloseDropdown(ref, (): void => setIsDropdownOpen(false))
-
-    useEffect(() => {
-        setSelectedDate(weatherData?.infos.current.date ?? null)
-    }, [weatherData])
 
     if (weatherData === null || selectedDate === null) return <div></div>
 
@@ -52,7 +49,7 @@ export function HourlyForecastContainer(): JSX.Element {
                     </button>
                 </div>
                 {isDropdownOpen &&
-                    <DaysDropdown selectedDate={selectedDate} setSelectedDate={setSelectedDate} dates={uniqueDates.slice(1, 8)}/>}
+                    <DaysDropdown selectedDate={selectedDate} setSelectedDate={setSelectedDateOverride} dates={uniqueDates.slice(1, 8)}/>}
             </div>
             {
                 forecasts

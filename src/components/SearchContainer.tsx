@@ -1,6 +1,7 @@
 import { type ChangeEvent, type JSX, useEffect, useState } from "react"
 import SearchIcon from "@/assets/images/icon-search.svg"
 import LoadingIcon from "@/assets/images/icon-loading.svg"
+import ErrorIcon from "@/assets/images/icon-error.svg"
 import type { GeoLocation } from "@/api/geocoding/schema"
 import { useGlobalStore } from "@/store"
 import { useFetch } from "@/hooks/fetch.hook"
@@ -11,9 +12,8 @@ import type { Coordinates, Nullable } from "@/types"
 export function SearchContainer(): JSX.Element {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
     const {
-        fetchedData: matchedLocations,
-        setFetchedData: setMatchedLocations,
-        isLoading,
+        fetchedData: matchedLocations, setFetchedData: setMatchedLocations,
+        isLoading, error, setError,
         fetchParameter: searchInput, setFetchParameter: setSearchInput
     } = useFetch<string, GeoLocation[]>(fetchMatchingLocation)
 
@@ -56,6 +56,7 @@ export function SearchContainer(): JSX.Element {
         setSearchInput(`${location.city}, ${location.region}, ${location.country}`)
         setSearchLocation(location)
         setIsDropdownOpen(false)
+        setError(null)
     }
 
     function handleSearch(): void {
@@ -63,6 +64,7 @@ export function SearchContainer(): JSX.Element {
             setCoordinates({ latitude: searchLocation.latitude, longitude: searchLocation.longitude })
             setSearchInput(null)
             setSearchLocation(null)
+            setError(null)
         }
     }
 
@@ -77,8 +79,8 @@ export function SearchContainer(): JSX.Element {
                        className="w-full h-full pl-15 pr-5 placeholder:text-preset-5 text-preset-5 color-neutral-200 rounded-12 border-focus-neutral"/>
                 {
                     isDropdownOpen
-                    && matchedLocations
-                    && <SearchDropdown locations={matchedLocations} updateSearchInput={updateSearchInput} isLoading={isLoading} />
+                    && <SearchDropdown locations={matchedLocations} updateSearchInput={updateSearchInput}
+                                       isLoading={isLoading} error={error}/>
                 }
             </div>
             <button disabled={!searchLocation} className={`h-14 px-6 py-4 rounded-12 bg-blue-500 text-preset-5 ${
@@ -89,19 +91,21 @@ export function SearchContainer(): JSX.Element {
     )
 }
 
-function SearchDropdown({ locations, updateSearchInput, isLoading }: {
-    locations: GeoLocation[],
-    updateSearchInput: (searchLocation: GeoLocation) => void,
-    isLoading: boolean
+function SearchDropdown({ locations, updateSearchInput, isLoading, error }: {
+    locations: Nullable<GeoLocation[]>, updateSearchInput: (searchLocation: GeoLocation) => void, isLoading: boolean,
+    error: Nullable<Error>
 }): JSX.Element {
+
+    if (error) return <SearchDropdownError error={error}/>
+    if (isLoading || locations === null) return <SearchDropdownLoading/>
 
     return (
         <div
-            className="w-full max-h-177 overflow-y-auto flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-700 absolute left-0 top-16"
+            className="w-full max-h-177 overflow-y-auto flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-700 absolute left-0 top-16 max-md:top-34"
         >
             {
-                isLoading
-                    ? <SearchDropdownLoading/>
+                locations.length === 0
+                    ? <div className="px-2 py-2.5 rounded-8">No results</div>
                     : locations.map((location: GeoLocation): JSX.Element => (
                         <div
                             key={location.id}
@@ -118,9 +122,27 @@ function SearchDropdown({ locations, updateSearchInput, isLoading }: {
 
 function SearchDropdownLoading(): JSX.Element {
     return (
-        <div className="flex flex-row gap-x-2.5 px-2 py-2.5 justify-center items-center">
-            <img src={LoadingIcon} alt="Loading Icon" className="w-4 h-4 spin-slow"/>
-            <p className="w-full text-preset-7">Search in progress...</p>
+        <div
+            className="w-full max-h-177 overflow-y-auto flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-700 absolute left-0 top-16 max-md:top-34"
+        >
+            <div className="flex flex-row gap-x-2.5 px-2 py-2.5 justify-center items-center">
+                <img src={LoadingIcon} alt="Loading Icon" className="w-4 h-4 spin-slow"/>
+                <p className="w-full text-preset-7">Search in progress...</p>
+            </div>
+        </div>
+    )
+}
+
+function SearchDropdownError({ error }: { error: Error }): JSX.Element {
+
+    return (
+        <div
+            className="w-full max-h-177 overflow-y-auto flex flex-col gap-y-1 p-2 rounded-12 bg-neutral-800 border border-neutral-700 absolute left-0 top-16 max-md:top-34"
+        >
+            <div className="flex flex-row gap-x-2.5 px-2 py-2.5 justify-center items-center">
+                <img src={ErrorIcon} alt="Error Icon" className="w-4 h-4"/>
+                <p className="w-full text-preset-7">{error.message}</p>
+            </div>
         </div>
     )
 }
