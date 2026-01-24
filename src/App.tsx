@@ -1,4 +1,4 @@
-import { type JSX } from "react"
+import { type JSX, useEffect } from "react"
 import { Header } from "@/components/Header"
 import { SearchContainer } from "@/components/SearchContainer"
 import { WeatherInfoContainer } from "@/components/WeatherInfoContainer"
@@ -7,22 +7,40 @@ import { HourlyForecastContainer } from "@/components/HourlyForecastContainer"
 import { useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
 import { APIError } from "@/components/APIError"
+import { getNavigatorLocation } from "@/utils"
 
 export function App(): JSX.Element {
-    const { weatherData, error } = useGlobalStore(
+    const { fetchWeatherData, weatherData, error } = useGlobalStore(
         useShallow((store) => ({
+            fetchWeatherData: store.fetchDataFunction,
             weatherData: store.fetchedData,
             error: store.error
         }))
     )
-    
+
+    useEffect(() => {
+        const abortController = new AbortController()
+        const signal = abortController.signal
+
+        getNavigatorLocation()
+            .then((location) => {
+                fetchWeatherData(location, signal)
+            })
+            .catch(() => {
+                // Set default location to Montreal, Canada (This is where I live)
+                fetchWeatherData({ latitude: 45.5, longitude: -73.56 }, signal)
+            })
+
+        return () => abortController.abort()
+    }, [fetchWeatherData])
+
     if (error) return (
         <>
             <Header/>
             <APIError/>
         </>
     )
-    
+
     return (
         <>
             <Header/>

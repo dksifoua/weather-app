@@ -25,7 +25,7 @@ export function DailyForecastContainer(): JSX.Element {
             <div className="grid grid-cols-3 md:grid-cols-7 gap-4">
                 {
                     isLoading
-                        ? Array.from({ length: 7 }, () => <WeatherCardLoading/>)
+                        ? Array.from({ length: 7 }, (_, index) => <WeatherCardLoading key={index}/>)
                         : forecasts.map((forecast, index) => (
                             <WeatherCard key={index} forecast={forecast}/>
                         ))

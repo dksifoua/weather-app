@@ -1,4 +1,4 @@
-import type { MeasureType, Nullable, UnitFor, Units, UnitSystem } from "@/types"
+import type { Coordinates, MeasureType, Nullable, UnitFor, Units, UnitSystem } from "@/types"
 
 import DrizzleIcon from "@/assets/images/icon-drizzle.webp"
 import FogIcon from "@/assets/images/icon-fog.webp"
@@ -134,4 +134,18 @@ export function getIcon(code: number): string {
         default:
             return SunnyIcon;
     }
+}
+
+export function getNavigatorLocation(): Promise<Coordinates> {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            reject(new Error("Not Supported"))
+            return
+        }
+        
+        navigator.geolocation.getCurrentPosition(
+            (position) => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
+            (error) => reject(error),
+        );
+    });
 }

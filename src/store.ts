@@ -88,7 +88,9 @@ export const useGlobalStore = create<GlobalStore>()(
                     }
                 })
                 .catch((error) => {
-                    console.error(`Error fetching weather data: ${error}`)
+                    if (error.name !== "AbortError") {
+                        console.error(`Error fetching weather data: ${error}`)
+                    }
                     if (!signal.aborted) set({ fetchedData: null, error: error, isLoading: false })
                 })
                 .finally(() => {
