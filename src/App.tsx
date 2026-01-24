@@ -6,14 +6,23 @@ import { DailyForecastContainer } from "@/components/DailyForecastContainer"
 import { HourlyForecastContainer } from "@/components/HourlyForecastContainer"
 import { useGlobalStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
+import { APIError } from "@/components/APIError"
 
 export function App(): JSX.Element {
-    const { weatherData } = useGlobalStore(
+    const { weatherData, error } = useGlobalStore(
         useShallow((store) => ({
-            weatherData: store.fetchedData
+            weatherData: store.fetchedData,
+            error: store.error
         }))
     )
-
+    
+    if (error) return (
+        <>
+            <Header/>
+            <APIError/>
+        </>
+    )
+    
     return (
         <>
             <Header/>

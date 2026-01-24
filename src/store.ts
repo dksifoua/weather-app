@@ -13,8 +13,9 @@ type GlobalStore = {
     switchUnit: (measure: MeasureType) => void
     fetchDataFunction: (coordinates: Coordinates, signal: AbortSignal) => void
     isLoading: boolean
-    fetchedData: Nullable<WeatherData>,
+    fetchedData: Nullable<WeatherData>
     error: Nullable<Error>
+    setError: (error: Nullable<Error>) => void
 }
 
 export const useGlobalStore = create<GlobalStore>()(
@@ -97,5 +98,6 @@ export const useGlobalStore = create<GlobalStore>()(
         isLoading: false,
         fetchedData: null,
         error: null,
+        setError: (error: Nullable<Error>) => set({ error }),
     })),
 )
