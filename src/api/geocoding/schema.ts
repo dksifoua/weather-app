@@ -6,7 +6,7 @@ const GeoLocationApiResponseSchema = z.object({
     latitude: z.number(),
     longitude: z.number(),
     admin1: z.string().optional(),
-    country: z.string(),
+    country: z.string().optional(),
 })
 export type GeoLocationApiResponse = z.infer<typeof GeoLocationApiResponseSchema>
 

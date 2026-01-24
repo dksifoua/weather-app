@@ -1,4 +1,4 @@
-import { type Dispatch, type JSX, type SetStateAction, useRef, useState } from "react"
+import { type JSX, useRef, useState } from "react"
 import DropdownIcon from "@/assets/images/icon-dropdown.svg"
 import { useCloseDropdown } from "@/hooks/dropdown.hook"
 import { useGlobalStore } from "@/store"
@@ -37,6 +37,11 @@ export function HourlyForecastContainer(): JSX.Element {
             )
         )
     ].map((value: string): Date => new Date(value))
+    
+    function setSelectedDate(date: Date): void {
+        setSelectedDateOverride(date)
+        setIsDropdownOpen(false)
+    }
 
     return (
         <div
@@ -53,7 +58,7 @@ export function HourlyForecastContainer(): JSX.Element {
                     </button>
                 </div>
                 {isDropdownOpen &&
-                    <DaysDropdown selectedDate={selectedDate} setSelectedDate={setSelectedDateOverride}
+                    <DaysDropdown selectedDate={selectedDate} setSelectedDate={setSelectedDate}
                                   dates={uniqueDates.slice(1, 8)}/>}
             </div>
             {
@@ -85,7 +90,7 @@ function HourlyWeatherCard({ data }: { data: WeatherDataHourlyForecast }): JSX.E
 
 function DaysDropdown({ selectedDate, setSelectedDate, dates }: {
     selectedDate: Date,
-    setSelectedDate: Dispatch<SetStateAction<Nullable<Date>>>,
+    setSelectedDate: (Date: Date) => void,
     dates: Date[]
 }): JSX.Element {
     const selectedDay = weekdayFormatter.format(selectedDate)
@@ -96,7 +101,7 @@ function DaysDropdown({ selectedDate, setSelectedDate, dates }: {
         >
             {
                 dates.map((date: Date, index: number) => {
-                    const day = weekdayFormatter.format(date)
+                    const day = weekdayFormatter.format(date)   
 
                     return (
                         <div key={index} onClick={() => setSelectedDate(date)}
